@@ -1,1 +1,5 @@
-# CS207_Final_Project
+# Group 13
+* Teddy Liu  
+* Preston Stephens
+* Zihao Xu
+* David Zheng
