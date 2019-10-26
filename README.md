@@ -1,6 +1,6 @@
 # Group 13
 * Teddy Liu  
-* Preston Stephens
+* Tapley Stephenson
 * Zihao Xu
 * David Zheng
 
