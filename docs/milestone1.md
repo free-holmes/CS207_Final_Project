@@ -22,7 +22,7 @@ The decomposition of the original function into elemental functions is illustrat
 
 Once the process has traversed across the entire graph, the final node should have both the value and the derivative of the function at the given point of evaluation. These values will also be available in the final row of the trace table.
 
-## How to Use "PackageName"
+## How to Use "autodiffpy"
 >How do you envision that a user will interact with your package? What should they import? 
 >How can they instantiate AD objects?
 >
