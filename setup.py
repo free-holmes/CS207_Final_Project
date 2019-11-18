@@ -121,7 +121,7 @@ setup(
     #
     #   py_modules=["my_module"],
     #
-    packages=['autodiffpy'],  # Required
+    packages=["autodiffpy"],  # Required
     # Specify which Python versions you support. In contrast to the
     # 'Programming Language' classifiers above, 'pip install' will check this
     # and refuse to install the project if the version does not match. If you
@@ -147,7 +147,7 @@ setup(
     # If there are data files included in your packages that need to be
     # installed, specify them here.
     #
-    install_requires=['numpy'],
+    install_requires=["numpy"],
     # If using Python 2.6 or earlier, then these have to be included in
     # MANIFEST.in as well.
     # package_data={"sample": ["package_data.dat"]},  # Optional
