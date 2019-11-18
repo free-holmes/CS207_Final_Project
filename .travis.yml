@@ -4,7 +4,9 @@ python:
 before_install:
     - pip install pytest pytest-cov
     - pip install codecov
+    - pip install black
 script:
-    - pytest --cov=./
+    - black --check .
+    - pytest --cov=autodiffpy/
 after_success:
     - codecov
