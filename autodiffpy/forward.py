@@ -207,3 +207,19 @@ class Vector(AutoDiff):
 
     def derivative(self, *args, **kwargs):
         return np.array([val.derivative(*args, **kwargs) for val in self.values])
+
+
+def Tan(x):
+    return Sin(x) / Cos(x)
+
+
+def Sec(x):
+    return 1 / Cos(x)
+
+
+def Csc(x):
+    return 1 / Sin(x)
+
+
+def Cot(x):
+    return 1 / Tan(x)

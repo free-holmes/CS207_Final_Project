@@ -1,4 +1,4 @@
-from autodiffpy import Var, Sin, Cos, Constant, Log, Vector
+from autodiffpy import Var, Sin, Cos, Constant, Log, Vector, Sec, Csc, Tan, Cot
 from pytest import approx, raises
 import numpy as np
 
@@ -190,3 +190,31 @@ def test_function_of_vector():
 
     assert f(x=2) == approx([np.log(2), np.log(4)])
     assert f.derivative("x", x=5) == approx([1 / 5, 2 / 5])
+
+
+def test_tan():
+    f = Tan("x")
+
+    assert f(x=2) == approx(np.tan(2))
+    assert f.derivative("x", x=2) == approx(1 / np.cos(2) ** 2)
+
+
+def test_sec():
+    f = Sec("x")
+
+    assert f(x=2) == approx(1 / np.cos(2))
+    assert f.derivative("x", x=2) == approx(np.tan(2) / np.cos(2))
+
+
+def test_cosec():
+    f = Csc("x")
+
+    assert f(x=-1) == approx(1 / np.sin(-1))
+    assert f.derivative("x", x=-1) == approx(-1 / np.tan(-1) / np.sin(-1))
+
+
+def test_cot():
+    f = Cot("x")
+
+    assert f(x=5) == approx(1 / np.tan(5))
+    assert f.derivative("x", x=5) == approx(-1 / np.sin(5) ** 2)
