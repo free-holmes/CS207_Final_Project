@@ -22,11 +22,11 @@ To illustrate the forward mode, let's consider the function
 $$f(x,y) = e^xsin(x+2y)$$
 where the inputs are $x$ and $y$. We would like to evaluate the function and find its derivative at $x=0$ and $y = \frac{\pi}{2}$. Additionally, we will seed the derivatives with $(1,1)$, which indicates that we would like to find derivatives of both $x$ and $y$. First, we can draw the computational graph of this function.
 
-![Trace Table](pics/milestone2-comp-graph.jpg){#id .class width=50% height=50%}
+![Trace Table](pics/milestone2-comp-graph.jpg)
 
 The trace table is shown below.
 
-![Trace Table](pics/milestone2-trace-table.png){#id .class width=50% height=50%}
+![Trace Table](pics/milestone2-trace-table.png)
 
 It is evident from the trace table that the final value of the function is 0, while the partial derivatives with respective to $x$ and $y$ are -1 and -2, respectively.
 
