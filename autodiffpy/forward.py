@@ -137,6 +137,8 @@ class Var(AutoDiff):
         self.variable_name = variable_name
 
     def __call__(self, **kwargs):
+        if self.variable_name not in kwargs:
+            raise ValueError(f"Variable {self.variable_name} not provided!")
         return kwargs[self.variable_name]
 
     def derivative(self, *args, **kwargs):
