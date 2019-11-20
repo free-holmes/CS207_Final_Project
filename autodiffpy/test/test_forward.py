@@ -218,3 +218,13 @@ def test_cot():
 
     assert f(x=5) == approx(1 / np.tan(5))
     assert f.derivative("x", x=5) == approx(-1 / np.sin(5) ** 2)
+
+
+def test_missing_arg():
+    f = Var("x") ** 2
+
+    with raises(ValueError):
+        f()
+
+    with raises(ValueError):
+        f.derivative("x")
