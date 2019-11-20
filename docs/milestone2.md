@@ -16,6 +16,20 @@ The decomposition of the original function into elemental functions is illustrat
 
 Once the process has traversed across the entire graph, the final node should have both the value and the derivative of the function at the given point of evaluation. These values will also be available in the final row of the trace table.
 
+The forward mode of automatic differentiation actually computes the product of the Jacobian matrix, $J$, where the $i,j^{th}$ entry is $J_{i,j} = \frac{\partial(f_i)}{\partial(x_j)}$ for function $f_i$ and variable $x_j$, and a seed vector, $p$, which represents the initial derivatives of each variable. The implication of this fact is that if we have a function with two variables $x,y$ and we choose the seed vector $p=(1,0)$, then, the forward mode of automatic differentiation would output $\frac{\partial(f)}{\partial(x)$.
+
+To illustrate the forward mode, let's consider the function
+$$f(x,y) = e^xsin(x+2y)$$
+where the inputs are $x$ and $y$. We would like to evaluate the function and find its derivative at $x=0$ and $y = \frac{\pi}{2}$. Additionally, we will seed the derivatives with $(1,1)$, which indicates that we would like to find derivatives of both $x$ and $y$. First, we can draw the computational graph of this function.
+
+The trace table is shown below.
+
+![](pics/milestone2-trace-table.png)
+
+It is evident from the trace table that the final value of the function is  while the partial derivatives with respective to $x$ and $y$ are  respectively.
+
+
+
 ## How to Use `autodiffpy`
 
 You can install `autodiffpy` by running `pip` from the command line.
