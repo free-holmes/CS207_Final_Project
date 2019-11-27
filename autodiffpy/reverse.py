@@ -165,7 +165,7 @@ def create_function():
     # evaluating expression
     eval_expr = eval(expr)
     try:
-        eval_expr.grad_value = 1
+        eval_expr.gradient_value = 1
         print(f'expressions = {eval_expr.value}')
         for i in var_list:
             print(f'{i} gradient = {vars()[i].get_gradient()}')
