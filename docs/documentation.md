@@ -1,4 +1,4 @@
-# Group 13 - Milestone 3
+# Group 13 - Documentation
 
 ## Introduction
 
