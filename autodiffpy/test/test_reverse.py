@@ -1,4 +1,4 @@
-from autodiffpy import Reverse, sin, cos, tan, sec, csc, cot, exp, sinh, cosh, tanh, sech, csch, coth, ln, log, sqrt
+from autodiffpy import Reverse, sin, cos, tan, sec, csc, cot, exp, sinh, cosh, tanh, sech, csch, coth, ln, log2, log10, log, sqrt
 from pytest import approx, raises
 import numpy as np
 import numpy as np
