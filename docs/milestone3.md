@@ -316,8 +316,13 @@ x = Reverse(1)
 y = Reverse(2)
 func = x * y + exp(x*y)
 func.gradient_value = 1.0 # this is the seed
+print(func.value)
 print(x.get_gradient())
 print(y.get_gradient())
+
+>>> 9.38905609893065
+>>> 16.7781121978613
+>>> 8.38905609893065
 ```
 
 ### External Dependencies
