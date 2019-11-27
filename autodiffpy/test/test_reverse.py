@@ -4,21 +4,24 @@ import numpy as np
 
 def test_single_var():
     x = Reverse(1)
-    x.gradient_value = 1.0
+    f = x
+    f.gradient_value = 1.0
     assert x.value == approx(1)
     assert x.get_gradient() == approx(1)
 
 
 def test_multiplication():
-    f = 4 * Reverse(1)
-	f.gradient_value = 1.0
+    x = Reverse(1)
+    f = 4 * x
+    f.gradient_value = 1.0
     assert f.value == approx(4)
-    assert f.get_gradient() == approx(4)
+    assert x.get_gradient() == approx(4)
 
-    f = Reverse(1) * 4
+    x = Reverse(1)
+    f = x * 4
     f.gradient_value = 1.0
     assert f == approx(4)
-    assert f.get_gradient() == approx(4)
+    assert x.get_gradient() == approx(4)
 
 
 def test_multiplication_by_variable():
@@ -26,48 +29,55 @@ def test_multiplication_by_variable():
     y = Reverse(2)
     f = x * y
     f.gradient_value = 1.0
-
+    assert f.value = 2
     assert x.get_gradient() == approx(2)
     assert y.get_gradient() == approx(1)
 
 
 def test_division():
-    f = 4 / Reverse(2)
+    x = Reverse(2)
+    f = 4 / x
     f.gradient_value = 1.0
     assert f.value == approx(2)
-    assert f.get_gradient() == approx(-1)
+    assert x.get_gradient() == approx(-1)
 
-    f = Reverse(5) / 4
+    x = Reverse(5)
+    f = x / 4
     f.gradient_value = 1.0
     assert f.value == approx(5 / 4)
-
-    assert f.get_gradient() == approx(1 / 4)
+    assert x.get_gradient() == approx(1 / 4)
 
 
 def test_power():
-    f = Reverse(3) ** 5
-
+    x = Reverse(3)
+    f = x ** 5
+    f.gradient_value = 1.0
     assert f.value == approx(3 ** 5)
-    assert f.get_gradient() == approx(5 * 3 ** 4)
+    assert x.get_gradient() == approx(5 * 3 ** 4)
 
-    f = Reverse(2) ** 2.5
-
-    assert f(x=2) == approx(2 ** 2.5)
-    assert f.get_gradient() == approx(2.5 * 2 ** 1.5)
-
-
-# def test_power_weird():
-#     f = 5 ** Var("x")
-
-#     assert f(x=4) == approx(5 ** 4)
-#     assert f.derivative("x", x=3) == approx(5 ** 3 * np.log(5))
+    x = Reverse(2)
+    f = x ** 2.5
+    f.gradient_value = 1.0
+    assert f == approx(2 ** 2.5)
+    assert x.get_gradient() == approx(2.5 * 2 ** 1.5)
 
 
-# def test_addition():
-#     f = 4 * Var("x") + Var("x") * -6
+def test_power_weird():
+    x = Reverse(3)
+    f = 5 ** x
+    f.gradient_value = 1.0
+    assert f.value == approx(5 ** 3)
+    assert x.get_gradient() == approx(5 ** 3 * np.log(5))
 
-#     assert f(x=2) == approx(4 * 2 + 2 * -6)
-#     assert f.derivative("x", x=3) == approx(4 + -6)
+
+def test_addition():
+    x = Reverse(3)
+    y = Reverse(3)
+    f = 4 * x + y * -6
+    f.gradient_value = 1.0
+    assert f.value == approx(4 * 3 + 3 * -6)
+    assert x.get_gradient() == approx(4)
+    assert y.get_gradient() == approx(-6)
 
 
 # def test_radd():
