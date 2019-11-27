@@ -1,4 +1,4 @@
-# Group 13 - Milestone 2
+# Group 13 - Milestone 3
 
 ## Introduction
 
@@ -289,6 +289,35 @@ class Pow(AutoDiff):
         a, b = self.base(**kwargs), self.base.derivative(*args, **kwargs)
         c, d = self.exp(**kwargs), self.exp.derivative(*args, **kwargs)
         return a ** c * (d * np.log(a) + b * c / a)
+```
+
+### Extension - Reverse Mode
+We implemented automatic differentiation reverse mode as our extension.
+
+|    |   | Supported | Functions |    |    | 
+| ---- | ---- |----- | ---- |------ | ---- |
+| exp  | ln   | log  | log2 | log10 | sqrt |
+| sin  | cos  | tan  | sec  | csc   | cot  |
+| sinh | cosh | tanh | sech | csch  | coth |
+
+The `log` function defaults to natural log but has an optional parameter `base` that the user can specify.  
+```python
+# to specify 3 as the log base
+log(x, 3)
+```
+
+####How to use
+Operation is almost identical to the forward mode. Primary difference is we now utitlize a `Reverse` object instead of a `Var` object. In addition you must send a seed the function typically with a value of `1`.
+
+```python
+from autodiffpy import Reverse, exp
+
+x = Reverse(1)
+y = Reverse(2)
+func = x * y + exp(x*y)
+func.gradient_value = 1.0 # this is the seed
+print(x.get_gradient())
+print(y.get_gradient())
 ```
 
 ### External Dependencies
