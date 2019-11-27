@@ -116,7 +116,7 @@ def sinh(x):
         x.children.append((cosh(x.value), z))
         return z
     except AttributeError:
-        return (exp(x)-exp(-x))/2
+        return np.sinh(x)
 
 def cosh(x):
     try:
@@ -124,7 +124,7 @@ def cosh(x):
         x.children.append((sinh(x.value), z))
         return z
     except AttributeError:
-        return (exp(x)+exp(-x))/2
+        return np.cosh(x)
 
 def tanh(x):
     return sinh(x)/cosh(x)
