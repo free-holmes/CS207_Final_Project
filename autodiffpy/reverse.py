@@ -161,7 +161,7 @@ def sqrt(x):
 
 
 def create_function():
-    # declare variables that will be used in expression
+    # declare variables that will be used in function
     while True:
         try:
             var_list = input("Enter the variable names separated by a space:")
@@ -183,19 +183,24 @@ def create_function():
         except ValueError:
             print(f'INVALID INPUT: {val}\nValue for {var_name} must be a real number.')
 
-    # input the expression
-    expr = input("Enter the function:")
+    while True:
+        try:
+            # input the function
+            func = input("Enter the function:")
+            # evaluate the function
+            eval_func = eval(func)
+            break
+        except NameError:
+            print(f'Undeclared variable name in function: {func}\nDeclared variables: {var_list}')
 
-    # evaluate the expression
-    eval_expr = eval(expr)
     try:
-        eval_expr.gradient_value = 1
-        print(f'expression = {eval_expr.value}')
+        eval_func.gradient_value = 1
+        print(f'function = {eval_func.value}')
         for i in var_list:
             print(f'{i} gradient = {vars()[i].get_gradient()}')
     except AttributeError:
-        print(f'There are no variables in the expression you entered: {expr}')
-        print(f'expression = {eval_expr}')
+        print(f'There are no variables in the function you entered: {func}')
+        print(f'function = {eval_func}')
 
 
 if __name__ == "__main__":
