@@ -29,15 +29,7 @@ class Reverse:
         return self.__add__(other)
 
     def __sub__(self, other):
-        try:
-            z = Reverse(self.value - other.value)
-            self.children.append((1, z))
-            other.children.append((1, z))
-            return z
-        except AttributeError:
-            z = Reverse(self.value - other)
-            self.children.append((1, z))
-            return z
+        return self.__add__(-other)
 
     def __rsub__(self, other):
         return self.__neg__() + other
