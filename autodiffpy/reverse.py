@@ -116,7 +116,7 @@ def sinh(x):
         x.children.append((cosh(x.value), z))
         return z
     except AttributeError:
-        return np.sinh(x)
+        return (exp(x)-exp(-x))/2
 
 def cosh(x):
     try:
@@ -124,7 +124,7 @@ def cosh(x):
         x.children.append((sinh(x.value), z))
         return z
     except AttributeError:
-        return np.cosh(x)
+        return (exp(x)+exp(-x))/2
 
 def tanh(x):
     return sinh(x)/cosh(x)
@@ -161,7 +161,7 @@ def sqrt(x):
 
 
 def create_function():
-    # declare variables that will be used in function
+    # declare variables that will be used in expression
     while True:
         try:
             var_list = input("Enter the variable names separated by a space:")
@@ -183,24 +183,19 @@ def create_function():
         except ValueError:
             print(f'INVALID INPUT: {val}\nValue for {var_name} must be a real number.')
 
-    while True:
-        try:
-            # input the function
-            func = input("Enter the function:")
-            # evaluate the function
-            eval_func = eval(func)
-            break
-        except NameError:
-            print(f'Undeclared variable name in function: {func}\nDeclared variables: {var_list}')
+    # input the expression
+    expr = input("Enter the function:")
 
+    # evaluate the expression
+    eval_expr = eval(expr)
     try:
-        eval_func.gradient_value = 1
-        print(f'function = {eval_func.value}')
+        eval_expr.gradient_value = 1
+        print(f'expression = {eval_expr.value}')
         for i in var_list:
             print(f'{i} gradient = {vars()[i].get_gradient()}')
     except AttributeError:
-        print(f'There are no variables in the function you entered: {func}')
-        print(f'function = {eval_func}')
+        print(f'There are no variables in the expression you entered: {expr}')
+        print(f'expression = {eval_expr}')
 
 
 if __name__ == "__main__":
