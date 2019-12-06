@@ -187,7 +187,7 @@ class Vector():
         # key values are the values of the variables
         # example:
         # func = ['x*2*y+y**3', '2*x**2*y', '3*y']
-        # vars_dict = {'x': 1, 'y': '2'}
+        # vars_dict = {'x': 1, 'y': 2}
         # vector = Vector(func, vars_dict)
 
         self.functions = functions
@@ -200,7 +200,7 @@ class Vector():
         # returns a string of the class in a user friendly form
         # example:
         # func = ['x*2*y+y**3', '2*x**2*y', '3*y']
-        # vars_dict = {'x': 1, 'y': '2'}
+        # vars_dict = {'x': 1, 'y': 2}
         # vector = Vector(func, vars_dict)
         # print(vector)
         # >>> x=1
@@ -247,12 +247,12 @@ class Vector():
                     vars()[i].reset()
                 if len(self.variables.items()) > 0:
                     self.gradients[f] = var_results
-            except (SyntaxError, NameError) as e:
-                print(f'INVALID FUNCTION: {f}, {e}')
             except AttributeError as e:
                 self.values[f] = eval(f)
+            except (SyntaxError, NameError) as e:
+                raise Exception(f'INVALID FUNCTION: {f}, {e}')
             except TypeError as e:
-                pass
+                raise TypeError(f'INVALID FUNCTION: Function {f} must be input as a string, {e}')
 
         # returns dictionary of functions with their gradients
         return self.gradients
@@ -262,7 +262,7 @@ class Vector():
         # gets the gradient values for one function and/or key
         # example:
         # func = ['x*2*y+y**3', '2*x**2*y', '3*y']
-        # vars_dict = {'x': 1, 'y': '2'}
+        # vars_dict = {'x': 1, 'y': 2}
         # vector = Vector(func, vars_dict)
         # vector.get_gradients(func_num=0, var_name='x')
         # >>> 4.0
