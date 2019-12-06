@@ -10,6 +10,8 @@ def test_eq_ne():
     f.gradient_value = 1.0
     g.gradient_value = 1.0
     h.gradient_value = 1.0
+    assert x == 5
+    assert x != 7
     assert f == g
     assert f != h
 
