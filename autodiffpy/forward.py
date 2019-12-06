@@ -315,6 +315,68 @@ def Cot(x):
     return 1 / Tan(x)
 
 
+class Arcsin(AutoDiff):
+    def __init__(self, val):
+        super().__init__()
+        self.val = AutoDiff.coerce(val)
+
+    def __call__(self, **kwargs):
+        return np.arcsin(self.val(**kwargs))
+
+    def derivative(self, *args, **kwargs):
+        return (
+            1
+            / np.sqrt(1 - self.val(**kwargs) ** 2)
+            * self.val.derivative(*args, **kwargs)
+        )
+
+
+class Arccos(AutoDiff):
+    def __init__(self, val):
+        super().__init__()
+        self.val = AutoDiff.coerce(val)
+
+    def __call__(self, **kwargs):
+        return np.arccos(self.val(**kwargs))
+
+    def derivative(self, *args, **kwargs):
+        return (
+            -1
+            / np.sqrt(1 - self.val(**kwargs) ** 2)
+            * self.val.derivative(*args, **kwargs)
+        )
+
+
+class Arctan(AutoDiff):
+    def __init__(self, val):
+        super().__init__()
+        self.val = AutoDiff.coerce(val)
+
+    def __call__(self, **kwargs):
+        return np.arctan(self.val(**kwargs))
+
+    def derivative(self, *args, **kwargs):
+        return 1 / (1 + self.val(**kwargs) ** 2) * self.val.derivative(*args, **kwargs)
+
+
+def Arcsec(x):
+    x = AutoDiff.coerce(x)
+
+    return Arccos(1 / x)
+
+
+def Arccsc(x):
+    x = AutoDiff.coerce(x)
+
+    return Arcsin(1 / x)
+
+
+def Arccot(x):
+    x = AutoDiff.coerce(x)
+
+    return Arctan(1 / x)
+
+
 def Exp(x):
     return AutoDiff.coerce(np.e) ** AutoDiff.coerce(x)
 

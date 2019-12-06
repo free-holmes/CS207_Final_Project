@@ -1,14 +1,20 @@
 from autodiffpy.forward import (
     Var,
-    Sin,
-    Cos,
     Constant,
     Log,
     Vector,
+    Sin,
+    Cos,
+    Tan,
     Sec,
     Csc,
-    Tan,
     Cot,
+    Arcsin,
+    Arccos,
+    Arctan,
+    Arcsec,
+    Arccsc,
+    Arccot,
     Exp,
     Sqrt,
     Sinh,
@@ -382,3 +388,46 @@ def test_log10():
 
     assert f(x=3) == approx(np.log10(3) * 2)
     assert f.derivative("x", x=4) == approx(1 / np.log(10) * 2 / 4)
+
+
+def test_arcsin():
+    f = Arcsin(2 * Var("x"))
+
+    assert f(x=0.4) == approx(np.arcsin(2 * 0.4))
+    assert f.derivative("x", x=0.4) == approx(1 / np.sqrt(1 - 0.8 ** 2) * 2)
+
+
+def test_arccos():
+    f = Arccos(2 * Var("x"))
+
+    assert f(x=0.1) == approx(np.arccos(2 * 0.1))
+    assert f.derivative("x", x=0.1) == approx(-1 / np.sqrt(1 - 0.2 ** 2) * 2)
+
+
+def test_arctan():
+    f = Arctan(3 * Var("x"))
+
+    assert f(x=3.5) == approx(np.arctan(3 * 3.5))
+    assert f.derivative("x", x=3.5) == approx(1 / (1 + (3 * 3.5) ** 2) * 3)
+
+
+def test_arcsec():
+    f = Arcsec(Var("x") ** 2)
+
+    assert f(x=3) == approx(np.arccos(1 / 9))
+    assert f.derivative("x", x=3) == approx(1 / (abs(9) * np.sqrt(81 - 1)) * 2 * 3)
+
+
+def test_arccsc():
+    f = Arccsc(2 * Var("x"))
+
+    assert f(x=-4) == approx(np.arcsin(1 / (2 * -4)))
+    x = 2 * -4
+    assert f.derivative("x", x=-4) == approx(-1 / (abs(x) * np.sqrt(x ** 2 - 1)) * 2)
+
+
+def test_arccot():
+    f = Arccot("x")
+
+    assert f(x=0.5) == approx(np.arctan(1 / 0.5))
+    assert f.derivative("x", x=0.5) == approx(-1 / (1 + 0.5 ** 2))
