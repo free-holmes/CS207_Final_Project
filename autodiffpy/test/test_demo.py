@@ -1,4 +1,4 @@
-from autodiffpy import Var, Log, Sin, Cos
+from autodiffpy.forward import Var, Log, Sin, Cos
 from autodiffpy.demo import newtons_method
 from pytest import approx
 import numpy as np

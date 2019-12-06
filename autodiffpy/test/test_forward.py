@@ -1,4 +1,26 @@
-from autodiffpy import Var, Sin, Cos, Constant, Log, Vector, Sec, Csc, Tan, Cot
+from autodiffpy.forward import (
+    Var,
+    Sin,
+    Cos,
+    Constant,
+    Log,
+    Vector,
+    Sec,
+    Csc,
+    Tan,
+    Cot,
+    Exp,
+    Sqrt,
+    Sinh,
+    Cosh,
+    Tanh,
+    Sech,
+    Csch,
+    Coth,
+    Ln,
+    Log2,
+    Log10,
+)
 from pytest import approx, raises
 import numpy as np
 
@@ -163,7 +185,7 @@ def test_log_weird():
     f = Log(Var("x") ** Var("y"))
 
     assert f(x=2, y=5) == approx(np.log(2 ** 5))
-    assert f.derivative("x", x=3, y=72) == approx(24)
+    assert f.derivative("x", x=3.0, y=72) == approx(24)
 
 
 def test_sin_of_const():
@@ -228,3 +250,135 @@ def test_missing_arg():
 
     with raises(ValueError):
         f.derivative("x")
+
+
+def test_eq():
+    f = Var("x") == Var("x")
+
+    assert f(x=1)
+    assert f(x=45)
+
+    f = Var("x") == Var("y")
+
+    assert not f(x=1, y=2)
+    assert f(x=1, y=1)
+
+
+def test_lt():
+    f = Var("x") < Var("y")
+
+    assert f(x=1, y=2)
+    assert not f(x=2, y=1)
+    assert not f(x=1, y=1)
+
+
+def test_gt():
+    f = Var("x") > Var("y")
+
+    assert f(x=24, y=2)
+    assert not f(x=2, y=24)
+    assert not f(x=2, y=2)
+
+
+def test_lte():
+    f = Var("x") <= Var("y")
+
+    assert f(x=-24, y=45)
+    assert not f(x=36, y=-2)
+
+    assert f(x=2, y=2)
+
+
+def test_gte():
+    f = Var("x") >= Var("y")
+
+    assert f(x=24, y=2)
+    assert not f(x=-2, y=45)
+    assert f(x=4, y=4)
+
+
+def test_ne():
+    f = Var("x") != Var("y")
+
+    assert f(x=2, y=3)
+    assert f(x=3, y=2)
+    assert not f(x=2, y=2)
+
+
+def test_exp():
+    f = Exp("x") + Exp(0)
+    assert f(x=2) == approx(np.exp(2) + 1)
+    assert f.derivative("x", x=2) == approx(np.exp(2))
+
+
+def test_sqrt():
+    f = Sqrt("x")
+    assert f(x=2) == approx(2 ** 0.5)
+    assert f.derivative("x", x=2) == approx(0.5 * (2 ** (-0.5)))
+
+
+def test_other_trig_funcs():
+    f = Sinh("x") + Sinh(2)
+    assert f(x=2) == approx(2 * np.sinh(2))
+    assert f.derivative("x", x=2) == approx(np.cosh(2))
+
+    f = Cosh("x") + Cosh(2)
+    assert f(x=2) == approx(2 * np.cosh(2))
+    assert f.derivative("x", x=2) == approx(np.sinh(2))
+
+    f = Tanh("x") + Tanh(2)
+    assert f(x=2) == approx(2 * np.tanh(2))
+    assert f.derivative("x", x=2) == approx(
+        (np.cosh(2) ** 2 - np.sinh(2) ** 2) / np.cosh(2) ** 2
+    )
+
+    f = Sech("x") + Sech(2)
+    assert f(x=2) == approx(2 * 1 / np.cosh(2))
+    assert f.derivative("x", x=2) == approx(
+        (-1 / np.cosh(2)) * (np.sinh(2) / np.cosh(2))
+    )
+
+    f = Csch("x") + Csch(2)
+    assert f(x=2) == approx(2 * 1 / np.sinh(2))
+    assert f.derivative("x", x=2) == approx(
+        (-1 / np.sinh(2)) * (np.cosh(2) / np.sinh(2))
+    )
+
+    f = Coth("x") + Coth(2)
+    assert f(x=2) == approx(2 * (np.cosh(2) / np.sinh(2)))
+    assert f.derivative("x", x=2) == approx(-1 / (np.sinh(2) ** 2))
+
+
+def test_neg():
+    f = -Var("x")
+
+    assert f(x=2) == approx(-2)
+    assert f.derivative("x", x=1) == approx(-1)
+
+
+def test_pos():
+    f = +Var("x")
+
+    assert f(x=3) == approx(3)
+    assert f.derivative("x", x=3) == approx(1)
+
+
+def test_ln():
+    f = Ln("x") ** 2
+
+    assert f(x=3) == approx(np.log(3) ** 2)
+    assert f.derivative("x", x=4) == approx(2 * np.log(4) / 4)
+
+
+def test_log2():
+    f = Log2("x") ** 3
+
+    assert f(x=3) == approx(np.log2(3) ** 3)
+    assert f.derivative("x", x=4) == approx(1 / np.log(2) ** 3 / 4 * np.log(4) ** 2 * 3)
+
+
+def test_log10():
+    f = Log10("x") * 2
+
+    assert f(x=3) == approx(np.log10(3) * 2)
+    assert f.derivative("x", x=4) == approx(1 / np.log(10) * 2 / 4)

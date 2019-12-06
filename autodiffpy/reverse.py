@@ -11,7 +11,9 @@ class Reverse:
 
     def get_gradient(self):
         if self.gradient_value is None:
-            self.gradient_value = sum(weight * child.get_gradient() for weight, child in self.children)
+            self.gradient_value = sum(
+                weight * child.get_gradient() for weight, child in self.children
+            )
         return self.gradient_value
 
     def __add__(self, other):
@@ -49,7 +51,7 @@ class Reverse:
         return self.__mul__(other)
 
     def __truediv__(self, other):
-        return self.__mul__(other**(-1))
+        return self.__mul__(other ** (-1))
 
     def __rtruediv__(self, other):
         return self.__pow__(-1) * other
@@ -57,17 +59,17 @@ class Reverse:
     def __pow__(self, other):
         try:
             z = Reverse(self.value ** other.value)
-            self.children.append((other.value * self.value**(other.value-1), z))
-            other.children.append((self.value**other.value * np.log(self.value), z))
+            self.children.append((other.value * self.value ** (other.value - 1), z))
+            other.children.append((self.value ** other.value * np.log(self.value), z))
             return z
         except AttributeError:
             z = Reverse(self.value ** other)
-            self.children.append((other * self.value**(other-1), z))
+            self.children.append((other * self.value ** (other - 1), z))
             return z
 
     def __rpow__(self, other):
         z = Reverse(other ** self.value)
-        self.children.append((other**self.value * np.log(other), z))
+        self.children.append((other ** self.value * np.log(other), z))
         return z
 
     def __neg__(self):
@@ -82,25 +84,31 @@ def sin(x):
     except AttributeError:
         return np.sin(x)
 
+
 def cos(x):
     try:
         z = Reverse(cos(x.value))
-        x.children.append((-1*sin(x.value), z))
+        x.children.append((-1 * sin(x.value), z))
         return z
     except AttributeError:
         return np.cos(x)
 
+
 def tan(x):
-    return sin(x)/cos(x)
+    return sin(x) / cos(x)
+
 
 def sec(x):
-    return 1/cos(x)
+    return 1 / cos(x)
+
 
 def csc(x):
-    return 1/sin(x)
+    return 1 / sin(x)
+
 
 def cot(x):
-    return 1/tan(x)
+    return 1 / tan(x)
+
 
 def exp(x):
     try:
@@ -110,13 +118,15 @@ def exp(x):
     except AttributeError:
         return np.exp(x)
 
+
 def sinh(x):
     try:
         z = Reverse(sinh(x.value))
         x.children.append((cosh(x.value), z))
         return z
     except AttributeError:
-        return (exp(x)-exp(-x))/2
+        return (exp(x) - exp(-x)) / 2
+
 
 def cosh(x):
     try:
@@ -124,37 +134,46 @@ def cosh(x):
         x.children.append((sinh(x.value), z))
         return z
     except AttributeError:
-        return (exp(x)+exp(-x))/2
+        return (exp(x) + exp(-x)) / 2
+
 
 def tanh(x):
-    return sinh(x)/cosh(x)
+    return sinh(x) / cosh(x)
+
 
 def sech(x):
-    return 1/cosh(x)
+    return 1 / cosh(x)
+
 
 def csch(x):
-    return 1/sinh(x)
+    return 1 / sinh(x)
+
 
 def coth(x):
-    return 1/tanh(x)
+    return 1 / tanh(x)
+
 
 def ln(x):
     return log(x)
 
+
 def log2(x):
     return log(x, 2)
 
+
 def log10(x):
     return log(x, 10)
+
 
 def log(x, base=np.exp(1)):
     # default log is natural log
     try:
         z = Reverse(log(x.value, base))
-        x.children.append((1/(log(base)*x.value), z))
+        x.children.append((1 / (log(base) * x.value), z))
         return z
     except AttributeError:
         return math.log(x, base)
 
+
 def sqrt(x):
-    return x**(1/2)
+    return x ** (1 / 2)

@@ -1,5 +1,6 @@
-from autodiffpy import Reverse, sin, cos, tan, sec, csc, cot, exp, sinh, cosh, tanh, sech, csch, coth, ln, log2, log10, log, sqrt
+from autodiffpy.reverse import *
 from pytest import approx, raises
+
 import numpy as np
 
 
@@ -87,7 +88,6 @@ def test_addition():
     assert x.get_gradient() == approx(2 * 3)
 
 
-
 def test_subtraction():
     x = Reverse(5)
     f = 4 * x ** 2.3 - 3 / x
@@ -100,7 +100,6 @@ def test_subtraction():
     f.gradient_value = 1.0
     assert f.value == approx(2)
     assert x.get_gradient() == approx(-1)
-
 
 
 def test_weirdness():
@@ -137,7 +136,7 @@ def test_cos():
     # Nested case
     x = Reverse(4)
     y = Reverse(3)
-    f = sin(cos(x*y))
+    f = sin(cos(x * y))
     f.gradient_value = 1.0
     assert f.value == approx(np.sin(np.cos(3 * 4)))
     assert x.get_gradient() == approx(-3 * np.sin(12) * np.cos(np.cos(12)))
@@ -156,14 +155,14 @@ def test_log():
     f = log(x ** y)
     f.gradient_value = 1.0
     assert f.value == approx(np.log(3 ** 7))
-    assert x.get_gradient() == approx((7 * (3 ** 6)) * 1/(3**7))
+    assert x.get_gradient() == approx((7 * (3 ** 6)) * 1 / (3 ** 7))
 
     # log2 and log10
     x = Reverse(3)
     f = log2(x) + log10(x)
     f.gradient_value = 1.0
     assert f.value == approx(np.log2(3) + np.log10(3))
-    assert x.get_gradient() == approx(1/(3*np.log(10)) + 1/(3*np.log(2)))
+    assert x.get_gradient() == approx(1 / (3 * np.log(10)) + 1 / (3 * np.log(2)))
 
 
 def test_tan():
@@ -210,7 +209,7 @@ def test_sqrt():
     x = Reverse(2)
     f = sqrt(x)
     f.gradient_value = 1.0
-    assert f.value == approx(2**0.5)
+    assert f.value == approx(2 ** 0.5)
     assert x.get_gradient() == approx(0.5 * (2 ** (-0.5)))
 
 
@@ -220,7 +219,7 @@ def test_other_trig_funcs():
     f.gradient_value = 1.0
     assert f.value == approx(2 * np.sinh(2))
     assert x.get_gradient() == approx(np.cosh(2))
-    
+
     x = Reverse(2)
     f = cosh(x) + cosh(2)
     f.gradient_value = 1.0
@@ -231,20 +230,22 @@ def test_other_trig_funcs():
     f = tanh(x) + tanh(2)
     f.gradient_value = 1.0
     assert f.value == approx(2 * np.tanh(2))
-    assert x.get_gradient() == approx((np.cosh(2)**2-np.sinh(2)**2) / np.cosh(2)**2)
+    assert x.get_gradient() == approx(
+        (np.cosh(2) ** 2 - np.sinh(2) ** 2) / np.cosh(2) ** 2
+    )
 
     x = Reverse(2)
     f = sech(x) + sech(2)
     f.gradient_value = 1.0
-    assert f.value == approx(2 * 1/np.cosh(2))
-    assert x.get_gradient() == approx((-1/np.cosh(2))*(np.sinh(2)/np.cosh(2)))
-    
+    assert f.value == approx(2 * 1 / np.cosh(2))
+    assert x.get_gradient() == approx((-1 / np.cosh(2)) * (np.sinh(2) / np.cosh(2)))
+
     x = Reverse(2)
     f = csch(x) + csch(2)
     f.gradient_value = 1.0
-    assert f.value == approx(2 * 1/np.sinh(2))
-    assert x.get_gradient() == approx((-1/np.sinh(2))*(np.cosh(2)/np.sinh(2)))
-    
+    assert f.value == approx(2 * 1 / np.sinh(2))
+    assert x.get_gradient() == approx((-1 / np.sinh(2)) * (np.cosh(2) / np.sinh(2)))
+
     x = Reverse(2)
     f = coth(x) + coth(2)
     f.gradient_value = 1.0
