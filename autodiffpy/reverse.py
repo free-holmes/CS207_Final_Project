@@ -178,7 +178,7 @@ def sqrt(x):
     return x**(1/2)
 
 
-class Vector():
+class rVector():
     def __init__(self, functions: list, variables: dict):
         # INPUT: functions is a list
         # functions must be a string
@@ -188,7 +188,7 @@ class Vector():
         # example:
         # func = ['x*2*y+y**3', '2*x**2*y', '3*y']
         # vars_dict = {'x': 1, 'y': 2}
-        # vector = Vector(func, vars_dict)
+        # vector = rVector(func, vars_dict)
 
         self.functions = functions
         self.variables = variables
@@ -201,7 +201,7 @@ class Vector():
         # example:
         # func = ['x*2*y+y**3', '2*x**2*y', '3*y']
         # vars_dict = {'x': 1, 'y': 2}
-        # vector = Vector(func, vars_dict)
+        # vector = rVector(func, vars_dict)
         # print(vector)
         # >>> x=1
         # >>> y=2
@@ -263,7 +263,7 @@ class Vector():
         # example:
         # func = ['x*2*y+y**3', '2*x**2*y', '3*y']
         # vars_dict = {'x': 1, 'y': 2}
-        # vector = Vector(func, vars_dict)
+        # vector = rVector(func, vars_dict)
         # vector.get_gradients(func_num=0, var_name='x')
         # >>> 4.0
         # vector.get_gradients(func_num=0)
