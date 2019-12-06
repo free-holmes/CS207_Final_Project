@@ -1,6 +1,68 @@
-from autodiffpy import Reverse, sin, cos, tan, sec, csc, cot, exp, sinh, cosh, tanh, sech, csch, coth, ln, log2, log10, log, sqrt
+from autodiffpy import Reverse, sin, cos, tan, sec, csc, cot, exp, sinh, cosh, tanh, sech, csch, coth, ln, log2, log10, log, sqrt, Vector
 from pytest import approx, raises
 import numpy as np
+
+def test_eq_ne():
+    x = Reverse(5)
+    f = sin(x) + 2
+    g = sin(x) + 2
+    h = cos(x) + 2
+    f.gradient_value = 1.0
+    g.gradient_value = 1.0
+    h.gradient_value = 1.0
+    assert f == g
+    assert f != h
+
+def test_str():
+    x = Reverse(5)
+    f = sin(x) + 2
+    f.gradient_value = 1.0
+    assert str(f) == 'value = 1.0410757253368614, gradient_value = 1.0'
+
+
+def test_find_gradient_vector_error_cases():
+    # function attribute error
+    func = ['3*2']
+    vars_dict = {'x': 1}
+    vector = Vector(func, vars_dict)
+    assert vector.values['3*2'] == 6
+
+    with raises(AttributeError): # variable attribute error
+        func = ['3*x']
+        vars_dict = {'2': 1}
+        vector = Vector(func, vars_dict)
+
+    with raises(ValueError):
+        func = ['3*x']
+        vars_dict = {'x': 'e'}
+        vector = Vector(func, vars_dict)
+
+    with raises(Exception):
+        func = ['3x']
+        vars_dict = {'x': 1}
+        vector = Vector(func, vars_dict)
+        func = ['3*x*y']
+        vars_dict = {'x': 1}
+        vector = Vector(func, vars_dict)
+
+    with raises(TypeError):
+        func = [2*3]
+        vars_dict = {'x': 1}
+        vector = Vector(func, vars_dict)
+
+def test_vector():
+    func = ['x*2*y+y**3', '2*x**2*y', '3*y']
+    vars_dict = {'x': 1, 'y': '2'}
+    vector = Vector(func, vars_dict)
+    assert str(vector) == "x=1\ny=2\nx*2*y+y**3=12.0  Df(x)=4.0  Df(y)=14.0  \n2*x**2*y=4.0  Df(x)=8.0  Df(y)=2.0  \n3*y=6.0  Df(x)=0  Df(y)=3"
+
+    func = ['x*2*y+y**3', '2*x**2*y', '3*y']
+    vars_dict = {'x': 1, 'y': 2}
+    vector = Vector(func, vars_dict)
+    assert vector.get_gradients(func_num=0, var_name='x') == approx(4)
+    assert vector.get_gradients(func_num=0) == {'x': 4.0, 'y': 14.0}
+    assert vector.get_gradients(var_name='x') == [4.0, 8.0, 0]
+    assert vector.get_gradients() == [{'x': 4.0, 'y': 14.0}, {'x': 8.0, 'y': 2.0}, {'x': 0, 'y': 3}]
 
 
 def test_single_var():
