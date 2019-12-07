@@ -306,8 +306,8 @@ The `log` function defaults to natural log but has an optional parameter `base` 
 log(x, 3)
 ```
 
-####How to use
-Operation is almost identical to the forward mode. Primary difference is we now utilize a `Reverse` object instead of a `Var` object. In addition you must send a seed the function typically with a value of `1`.
+#### How to use  
+Non-vector operations are almost identical to the forward mode. Primary difference is we now utilize a `Reverse` object instead of a `Var` object. In addition you must send a seed the function, typically with a value of `1`.
 
 ```python
 from autodiffpy import Reverse, exp
@@ -325,7 +325,7 @@ print(y.get_gradient())
 >>> 8.38905609893065
 ```
 
-##### Vector Operations
+##### Vector Operations  
 ```python
 from autodiffpy import Reverse, rVector
 
