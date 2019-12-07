@@ -307,7 +307,7 @@ log(x, 3)
 ```
 
 ####How to use
-Operation is almost identical to the forward mode. Primary difference is we now utitlize a `Reverse` object instead of a `Var` object. In addition you must send a seed the function typically with a value of `1`.
+Operation is almost identical to the forward mode. Primary difference is we now utilize a `Reverse` object instead of a `Var` object. In addition you must send a seed the function typically with a value of `1`.
 
 ```python
 from autodiffpy import Reverse, exp
@@ -315,7 +315,7 @@ from autodiffpy import Reverse, exp
 x = Reverse(1)
 y = Reverse(2)
 func = x * y + exp(x*y)
-func.gradient_value = 1.0 # this is the seed
+func.gradient_value = 1.0 #this is the seed
 print(func.value)
 print(x.get_gradient())
 print(y.get_gradient())
@@ -324,6 +324,44 @@ print(y.get_gradient())
 >>> 16.7781121978613
 >>> 8.38905609893065
 ```
+
+##### Vector Operations
+```python
+from autodiffpy import Reverse, rVector
+
+func = ['x*2*y+y**3', '2*x**2*y', '3*y'] #pass in list of functions
+vars_dict = {'x': 1, 'y': 2} #pass in dictionary of variables and values
+vector = rVector(func, vars_dict)
+
+print(vector)
+>>> x=1
+>>> y=2
+>>> x*2*y+y**3=12.0  Df(x)=4.0  Df(y)=14.0
+>>> 2*x**2*y=4.0  Df(x)=8.0  Df(y)=2.0
+>>> 3*y=6.0  Df(x)=0  Df(y)=3
+
+#calculate value and gradients for new variable values
+vector.find_gradients(variables={'x': 5, 'y': 3})
+print(vector)
+>>> x=5
+>>> y=3
+>>> x*2*y+y**3=57.0  Df(x)=6.0  Df(y)=37.0
+>>> 2*x**2*y=150.0  Df(x)=60.0  Df(y)=50.0
+>>> 3*y=9.0  Df(x)=0  Df(y)=3
+
+#get gradient of specific function and variable
+vector.get_gradients(func_num=0, var_name='x')
+>>> 6.0
+
+#get gradient of one variable from all functions
+vector.get_gradients(var_name='x')
+>>> [6.0, 60.0, 0]
+
+#get gradient of all variables from one function
+vector.get_gradients(func_num=0)
+>>> {'x': 6.0, 'y': 37.0}
+```
+
 
 ### External Dependencies
 
