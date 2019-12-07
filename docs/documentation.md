@@ -34,6 +34,8 @@ It is important to note that, the forward mode of automatic differentiation is m
 
 ## How to Use `autodiffpy`
 
+### Installation
+
 You can install `autodiffpy` by running `pip` from the command line.
 
 ```bash
@@ -43,6 +45,8 @@ pip install .
 ```
 
 This will install a package called `autodiffpy` into Python. You can also create a virtual environment prior to installing with `pip`.
+
+### Basic Usage
 
 A user will most likely import two important exports from our package
 
@@ -291,7 +295,11 @@ class Pow(AutoDiff):
         return a ** c * (d * np.log(a) + b * c / a)
 ```
 
-### Extension - Reverse Mode
+### External Dependencies
+
+We only rely on `numpy` as our external dependency. We use `numpy` to compute the trigonometric functions and log. We also use `numpy` to return arrays when the result of an evaluation is a vector.
+
+## Extension: Reverse Mode
 We implemented automatic differentiation reverse mode as our extension.
 
 |    |   | Supported | Functions |    |    | 
@@ -306,7 +314,7 @@ The `log` function defaults to natural log but has an optional parameter `base` 
 log(x, 3)
 ```
 
-#### How to use  
+### How to use  
 Non-vector operations are almost identical to the forward mode. Primary difference is we now utilize a `Reverse` object instead of a `Var` object. In addition you must seed the function, typically with a value of `1`.
 
 ```python
@@ -325,7 +333,7 @@ print(y.get_gradient())
 >>> 8.38905609893065
 ```
 
-##### Vector Operations  
+### Vector Operations  
 ```python
 from autodiffpy import Reverse, rVector
 
