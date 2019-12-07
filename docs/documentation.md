@@ -336,13 +336,11 @@ class Pow(AutoDiff):
 We only rely on `numpy` as our external dependency. We use `numpy` to compute the trigonometric functions and log. We also use `numpy` to return arrays when the result of an evaluation is a vector.
 
 ## Extension: Reverse Mode
-We implemented automatic differentiation reverse mode as our extension.
+We implemented automatic differentiation reverse mode as our extension. Reverse mode can be more efficient than forward mode when there are far more inputs than outputs.
 
-|    |   | Supported | Functions |    |    | 
-| ---- | ---- |----- | ---- |------ | ---- |
-| exp  | ln   | log  | log2 | log10 | sqrt |
-| sin  | cos  | tan  | sec  | csc   | cot  |
-| sinh | cosh | tanh | sech | csch  | coth |
+### Implementation
+
+The following functions are supported in reverse mode: exp, ln, log, log2, log10, sqrt, sin, cos, tan, sec, csc, cot, sinh, cosh, tanh, sech, csch, coth
 
 The `log` function defaults to natural log but has an optional parameter `base` that the user can specify.  
 ```python
