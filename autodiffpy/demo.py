@@ -1,4 +1,4 @@
-from autodiffpy import Var
+from autodiffpy.forward import Var
 
 
 def newtons_method(f, initial_guess=0):
