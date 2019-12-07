@@ -307,7 +307,7 @@ log(x, 3)
 ```
 
 #### How to use  
-Non-vector operations are almost identical to the forward mode. Primary difference is we now utilize a `Reverse` object instead of a `Var` object. In addition you must send a seed the function, typically with a value of `1`.
+Non-vector operations are almost identical to the forward mode. Primary difference is we now utilize a `Reverse` object instead of a `Var` object. In addition you must seed the function, typically with a value of `1`.
 
 ```python
 from autodiffpy import Reverse, exp
