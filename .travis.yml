@@ -4,10 +4,8 @@ python:
 install:
   - pip install pytest pytest-cov
   - pip install codecov
-  #- pip install black
   - pip install -e .
 script:
-  #- black --check .
-  - pytest --cov=autodiffpy/
+  - pytest --cov=autodiffpy/ --cov-report term-missing
 after_success:
   - codecov
