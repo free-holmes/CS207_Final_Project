@@ -4,8 +4,13 @@ python:
 install:
   - pip install pytest pytest-cov
   - pip install codecov
-  - pip install -e .
 script:
-  - pytest --cov=autodiffpy/ --cov-report term-missing
+  - python -m pytest --cov=autodiffpy/ --cov-report term-missing
 after_success:
   - codecov
+deploy:
+  provider: pypi
+  user: "__token__"
+  password:
+    secure: Aw3Ah2Zu5fv/25l60VefhKdmEQ4wObEE60KR15X/jxjy4OvjpVLdxWaPtzLSdobL/7vxEEtcr0Lto9MIeQchj0g+XxGOi97wug9iZXn4lGQFhDq1C7snNsYxO5dcivr3barYwDpVl6OQu+cMwXCZ8av2r0ovOhN93fkYcpkyURh2lSWwpb5iwpDWpRIASrf7SkSIAYaZy2+HGVQldOF8nKs3Jxn7IsyjyYiPDPzBmnfraZuReCNE6bd6kMjyMASwpTeGX+UiyxG6bx8eknC1DlbISC2NvyYct6/nf7o2TE/tZQRS9Gpucc/s0mzw4L4q0VEWo3bk1I4JNEY73SibE5zxWoAnB+WsnahgRhYRDr/IQkORmm0wii3p9rTMBBElt60wUQHOkCssKlyVUMn0wrWWneSUioMTqFXb+LG/E4NDkIO7vb7gb4k4G9BXVSpjAZ8iLmJLseOAxiNrOyIPi+OVQG2oNwsFkMt7FotHvQTdsV7WO034m9f7gy1hWUGuKGtVmfX2IpJxo5k8qIZP+f1V6hwn5wDOjGoikm1sdeQFEx8q9kru5Bh9G1xwE9ivQnslQGRmZg34RLn6YOs4rxnYOoHALBJ3Tb/thFrIqp1P9ZpvbKuOuXI/tIWwbwWTXXAGdzi3JWOfxk/7FjSd/zqo+bjyNFBiT89pEz3E6cw=
+  distributions: "sdist bdist_wheel"
