@@ -150,17 +150,27 @@ f.derivative('x', x=4) # returns approximately 610.89
 
 ```
 cs207-FinalProject/
-    README.md
-    LICENSE
-    .travis.yml
-    docs/
-        milestone1.md
-        milestone2.md
     autodiffpy/
         __init__.py
+        demo.py
         forward.py
+        reverse.py
         test/
+            test_demo.py
             test_forward.py
+            test_reverse.py
+    docs/
+        documentation.md
+        milestone1.md
+        milestone2.md
+        pics/
+            milestone2-comp-graph.jpg
+            milestone2-trace-table.png
+    .gitignore
+    .travis.yml
+    LICENSE
+    README.md
+    setup.py
 ```
 
 ### Modules
