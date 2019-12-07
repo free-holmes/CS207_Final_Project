@@ -380,19 +380,3 @@ vector.get_gradients(func_num=0)
 >>> {'x': 6.0, 'y': 37.0}
 ```
 
-
-### External Dependencies
-
-We only rely on `numpy` as our external dependency. We use `numpy` to compute the trigonometric functions and log. We also use `numpy` to return arrays when the result of an evaluation is a vector.
-
-### Not Implemented
-
-We still have not implemented the reverse mode, which is our planned extension for future work. Also, we can continue to add tests to improve the robustness of our package (although line coverage is already 100%).
-
-## Future Features
-
-The main future feature we would like to implement is the reverse mode of automatic differentiation. The primary difficulty in implementing the reverse mode is mainly capturing the logic of the reverse mode with our computations. With the forward mode, it felt straightforward since the dual numbers provided much of the scaffolding. With the reverse mode, it feels much more open ended although still well-defined.
-
-The main data structure that will have to change is our modeling of the computation graph. It is imperative in the reverse mode that we are able to visit the "parents" of a node in the graph to perform the computation, so we will need to add additional attributes to each node to include the "back edges" to its parents.
-
-Most likely we will include the work for the reverse mode in `autodiffpy/reverse.py` and then refactor common components between `forward.py` and `reverse.py` into a file called `common.py` or similar. Also, note that it is ultimately our goal to automatically choose between forward and reverse mode based on the number of inputs and outputs to the defined function.
