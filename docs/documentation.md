@@ -179,6 +179,8 @@ The primary exported module is `autodiffpy` which lives in its entirety under th
 
 Under the `autodiffpy` folder is the `forward.py` file/module. This contains the logic and implementation of the forward mode of automatic differentiation. It defines the various "nodes" in our computation graph including the interesting elementary functions like Log and the trig functions.
 
+The `autodiffpy` folder also contains the `reverse.py` file/module. This contains the logic and implementation of the reverse mode of automatic differentiation. 
+
 ### Tests
 
 Tests live under the `autodiffpy/test` folder. They can be run from the top-level of the repository using the singular command `pytest`. Tests are run on every commit to the repository via `TravisCI`. Coverage information is generated via `pytest` directly by invoking with the `pytest --cov=autodiffpy`. Coverage information is stored via a call to `codecov` during the Travis build.
