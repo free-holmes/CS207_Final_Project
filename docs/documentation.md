@@ -280,7 +280,7 @@ class AutoDiff:
         return Add(AutoDiff.coerce(0), self)
 ```
 
-We define a `classmethod` called `_coerce` to help in situations where the dunder method is called with a float or integer such as
+We define a `classmethod` called `coerce` to help in situations where the dunder method is called with a float or integer such as
 
 ```python
 f = 2 * Var('x')
