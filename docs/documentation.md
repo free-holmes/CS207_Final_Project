@@ -348,16 +348,22 @@ The `log` function defaults to natural log but has an optional parameter `base` 
 log(x, 3)
 ```
 
-### How to use  
-Non-vector operations are almost identical to the forward mode. Primary difference is we now utilize a `Reverse` object instead of a `Var` object. In addition you must seed the function, typically with a value of `1`.
+### How to use: Scalars 
+Non-vector operations in reverse mode are almost identical to those in the forward mode. The primary difference is that we now utilize a `Reverse` object instead of a `Var` object. In addition, the user must seed the function, typically with a value of `1`.
+
+Note that the derivative can be found by calling `get_gradient` in reverse mode, instead of `derivative` as in forward mode.
 
 ```python
 from autodiffpy import Reverse, exp
 
+# Declare reverse variables
 x = Reverse(1)
 y = Reverse(2)
+# Declare function
 func = x * y + exp(x*y)
-func.gradient_value = 1.0 #this is the seed
+# Set seed value
+func.gradient_value = 1.0 
+# Get values and derivatives
 print(func.value)
 print(x.get_gradient())
 print(y.get_gradient())
@@ -367,12 +373,15 @@ print(y.get_gradient())
 >>> 8.38905609893065
 ```
 
-### Vector Operations  
+### How to use: Vectors
 ```python
 from autodiffpy import Reverse, rVector
 
-func = ['x*2*y+y**3', '2*x**2*y', '3*y'] #pass in list of functions
-vars_dict = {'x': 1, 'y': 2} #pass in dictionary of variables and values
+# Create list of functions
+func = ['x*2*y+y**3', '2*x**2*y', '3*y']
+# Create dictionary of variables and values
+vars_dict = {'x': 1, 'y': 2} 
+# Declare rVector with function, variables, and values
 vector = rVector(func, vars_dict)
 
 print(vector)
@@ -382,7 +391,7 @@ print(vector)
 >>> 2*x**2*y=4.0  Df(x)=8.0  Df(y)=2.0
 >>> 3*y=6.0  Df(x)=0  Df(y)=3
 
-#calculate value and gradients for new variable values
+# Calculate value and gradients for new variable values
 vector.find_gradients(variables={'x': 5, 'y': 3})
 print(vector)
 >>> x=5
@@ -391,16 +400,15 @@ print(vector)
 >>> 2*x**2*y=150.0  Df(x)=60.0  Df(y)=50.0
 >>> 3*y=9.0  Df(x)=0  Df(y)=3
 
-#get gradient of specific function and variable
+# Get gradient of specific function and variable
 vector.get_gradients(func_num=0, var_name='x')
 >>> 6.0
 
-#get gradient of one variable from all functions
+# Get gradient of one variable from all functions
 vector.get_gradients(var_name='x')
 >>> [6.0, 60.0, 0]
 
-#get gradient of all variables from one function
+# Get gradient of all variables from one function
 vector.get_gradients(func_num=0)
 >>> {'x': 6.0, 'y': 37.0}
 ```
-
