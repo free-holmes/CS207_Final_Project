@@ -21,7 +21,7 @@ class Reverse:
         return self.gradient_value
 
     def __str__(self):
-        return f'value = {self.value}, gradient_value = {self.gradient_value}'
+        return f"value = {self.value}, gradient_value = {self.gradient_value}"
 
     def __add__(self, other):
         try:
@@ -84,15 +84,21 @@ class Reverse:
 
     def __eq__(self, other):
         try:
-            return self.value == other.value and self.gradient_value == other.gradient_value
+            return (
+                self.value == other.value
+                and self.gradient_value == other.gradient_value
+            )
         except AttributeError:
             return self.value == other
 
     def __ne__(self, other):
         try:
-            return self.value != other.value or self.gradient_value != other.gradient_value
+            return (
+                self.value != other.value or self.gradient_value != other.gradient_value
+            )
         except AttributeError:
             return self.value != other
+
 
 def sin(x):
     try:
@@ -194,10 +200,10 @@ def log(x, base=np.exp(1)):
 
 
 def sqrt(x):
-    return x**(1/2)
+    return x ** (1 / 2)
 
 
-class rVector():
+class rVector:
     def __init__(self, functions: list, variables: dict):
         # INPUT: functions is a list
         # functions must be a string
@@ -228,9 +234,13 @@ class rVector():
         # >>> 2*x**2*y=4.0  Df(x)=8.0  Df(y)=2.0
         # >>> 3*y=6.0  Df(x)=0  Df(y)=3
 
-        printout = ''.join([f"{k}={v}\n" for k,v in self.variables.items()])
+        printout = "".join([f"{k}={v}\n" for k, v in self.variables.items()])
         for i, j in zip(self.gradients.items(), self.values.items()):
-            printout += f'{j[0]}={j[1]}  ' + ''.join([f"Df({k})={v}  " for k,v in i[1].items()]) + '\n'
+            printout += (
+                f"{j[0]}={j[1]}  "
+                + "".join([f"Df({k})={v}  " for k, v in i[1].items()])
+                + "\n"
+            )
         return printout.rstrip()
 
     def find_gradients(self, functions: list = None, variables: dict = None):
@@ -248,9 +258,13 @@ class rVector():
                 assert k[0].isalpha()
                 vars()[k] = Reverse(float(v))
             except (AttributeError, AssertionError) as e:
-                raise AttributeError(f'INVALID VARIABLE: {k} in {self.variables.keys()}, All variable names must be alphanumeric.')
+                raise AttributeError(
+                    f"INVALID VARIABLE: {k} in {self.variables.keys()}, All variable names must be alphanumeric."
+                )
             except ValueError as e:
-                raise ValueError(f'INVALID VALUE: {k} = {v}, assigned value must be a real number.')
+                raise ValueError(
+                    f"INVALID VALUE: {k} = {v}, assigned value must be a real number."
+                )
 
         # evaluate function and gradients
         self.values = {}
@@ -269,13 +283,14 @@ class rVector():
             except AttributeError as e:
                 self.values[f] = eval(f)
             except (SyntaxError, NameError) as e:
-                raise Exception(f'INVALID FUNCTION: {f}, {e}')
+                raise Exception(f"INVALID FUNCTION: {f}, {e}")
             except TypeError as e:
-                raise TypeError(f'INVALID FUNCTION: Function {f} must be input as a string, {e}')
+                raise TypeError(
+                    f"INVALID FUNCTION: Function {f} must be input as a string, {e}"
+                )
 
         # returns dictionary of functions with their gradients
         return self.gradients
-
 
     def get_gradients(self, func_num: int = None, var_name: str = None):
         # gets the gradient values for one function and/or key
