@@ -287,7 +287,7 @@ We see that the `.derivative` method follows exactly the same form as the epsilo
 
 The `Constant` and `Var` classes serve as "base cases" for our recursive traversal of the computation graph. At the nodes of the graph, we can either return the constant given, zero, one, or substitute in the value of the variable provided by the user.
 
-Another thing of note is that we completely generalized the derivative of powers so that there is no need for special casing for constant vs variable exponents. This is captured by the `Pow` class, which is implemented as:
+It is also worth noting that we completely generalized the derivative of powers so that there is no need for special casing for constant vs variable exponents. This is captured by the `Pow` class, which is implemented as:
 
 ```python
 class Pow(AutoDiff):
