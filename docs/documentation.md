@@ -151,7 +151,6 @@ f.derivative('x', x=4) # returns approximately 610.89
 ```
 cs207-FinalProject/
     autodiffpy/
-        __init__.py
         demo.py
         forward.py
         reverse.py
