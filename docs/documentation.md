@@ -30,7 +30,7 @@ The trace table is shown below.
 
 It is evident from the trace table that the final value of the function is 0, while the partial derivatives with respective to $x$ and $y$ are -1 and -2, respectively.
 
-It is important to note that, the forward mode of automatic differentiation is more efficient when the number of outputs far exceeds the number of inputs. 
+One should note that the forward mode of automatic differentiation is more efficient when the number of outputs far exceeds the number of inputs. 
 
 ## How to Use `autodiffpy`
 
