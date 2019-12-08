@@ -36,22 +36,26 @@ One should note that the forward mode of automatic differentiation is more effic
 
 ### Installation
 
-You can install `autodiffpy` by running `pip` from the command line.
+You can install `autodiffpy` from `PyPI` by running `pip` from the command line.
 
 ```bash
-git clone https://github.com/free-holmes/cs207-FinalProject.git
-cd cs207-FinalProject
-pip install .
+pip install autodiffpy-free-holmes
 ```
 
-This will install a package called `autodiffpy` into Python. You can also create a virtual environment prior to installing with `pip`.
+Alternatively, you can install the package directly from GitHub.
+
+```bash
+pip install git+git://github.com/free-holmes/cs207-FinalProject.git
+```
 
 ### Basic Usage
+
+This section assumes a user will be working with the forward mode of automatic differentiation. Further instructions on reverse mode can be found in the extension section.
 
 A user will most likely import two important exports from our package
 
 ```python
-from autodiffpy import Var, Vector
+from autodiffpy.forward import Var, Vector
 ```
 
 The `Var` class can be used to instantiate abstract variables that can be differentiated later. For example, if we wanted to represent the function f(x) = x, we would write
@@ -70,7 +74,7 @@ f = x ** 2 + 3 * x - x / 4
 If the user would like to use trignometric methods or log, they can import those objects from `autodiffpy`. For example, if we wanted to represent f(x) = cos(sin(2x)), we would write
 
 ```python
-from autodiffpy import Sin, Cos, Var
+from autodiffpy.forward import Sin, Cos, Var
 f = Cos(Sin(2 * Var('x')))
 ```
 
@@ -85,17 +89,17 @@ f = x ** (2 * y)
 If the user would like to have a multidimensional output, they can combine multiple functions using the `Vector` class. Suppose our function was f(x, y) = (y^2, xy), we would write this as
 
 ```python
-from autodiffpy import Var, Vector
+from autodiffpy.forward import Var, Vector
 x = Var('x')
 y = Var('y')
 f = Vector([y ** 2, x * y])
 ```
 
-If the user would like to have a function which is a constant, they can do that as well with the `Const` export. Suppose we want f(x) = 1. That can be represented by
+If the user would like to have a function which is a constant, they can do that as well with the `Constant` export. Suppose we want f(x) = 1. That can be represented by
 
 ```python
-from autodiffpy import Const
-f = Const(1)
+from autodiffpy.forward import Constant
+f = Constant(1)
 ```
 
 To get the value of a function at a particular point, the user can simply call the constructed function objects with keyword arguments. Note that the `x` and `y` in the keyword arguments are _not_ hardcoded; they correspond to the variables that are bound via `Var` constructors. For example,
@@ -104,11 +108,11 @@ To get the value of a function at a particular point, the user can simply call t
 x = Var('x')
 y = Var('y')
 f = Vector([y ** 2, x * y])
-f(x=1, y=2) # returns [4, 2]
+f(x=1, y=2) # Returns [4, 2]
 
 z = Var('z')
 f = z ** z
-f(z=3) # returns 27
+f(z=3) # Returns 27
 ```
 
 To get the derivative, the user can call `.derivative` on the `AutoDiff` object and pass in the variable to differentiate with respect to as well as the point they would like to get the derivative at. Again, the keyword arguments must correspond to the variables that are bound into the function.
@@ -117,31 +121,29 @@ To get the derivative, the user can call `.derivative` on the `AutoDiff` object 
 x = Var('x')
 y = Var('y')
 f = Vector([y ** 2, x * y])
-f.derivative('x', x=1, y=2)
-f.derivative('y', x=1, y=2)
+f.derivative('x', x=1, y=2) # Returns [0, 2]
+f.derivative('y', x=1, y=2) # Returns [4, 1]
 ```
-
-The distinction between forward and backward mode will be hidden from the user and decided automatically depending on the number of inputs and outputs of the function.
 
 ### Quick Demo
 
 Suppose we are interested in modeling the wacky function f(x) = x^x. We would create the function as thus:
 
 ```python
-from autodiffpy import Var
+from autodiffpy.forward import Var
 f = Var('x') ** Var('x')
 ```
 
 To evaluate this function at f(4), we would write
 
 ```python
-f(4) # returns 256
+f(x=4) # Returns 256
 ```
 
 and to get the derivative at the point, f'(4), we would write
 
 ```python
-f.derivative('x', x=4) # returns approximately 610.89
+f.derivative('x', x=4) # Returns approximately 610.89
 ```
 
 ## Software Organization
