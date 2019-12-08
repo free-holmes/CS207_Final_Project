@@ -2,21 +2,21 @@
 
 ## Introduction
 
-Our software aims to compute derivatives accurately and in a cost-efficient manner. We will create a Python package that implements the forward and reverse modes of automatic differentiation. This is important because it overcomes the limitations of symbolic differentiation (computationally intensive) and the finite difference method (accuracy/stability).
+Our software aims to compute derivatives accurately and in a cost-efficient manner. Our Python package, `autodiffpy`, implements the forward and reverse modes of automatic differentiation. This computation is important because it overcomes the limitations of symbolic differentiation (computationally intensive) and the finite difference method (inaccurate/unstable).
 
-Derivatives are extremely important in numerical algebra. We can use derivatives to find the roots of differentiable functions or the minima of other functions. This second use case has become increasingly important in the field of machine learning where optimizing and "learning" in deep neural networks essentially boils down to finding local minima of highly nested function application.
+Derivatives are highly important in numerical algebra. We can use derivatives to find the roots of differentiable functions or the minima of other functions. This second use case has become increasingly important in the field of machine learning where optimizing and "learning" in deep neural networks requires finding local minima of highly nested functions.
 
 ## Background
 
 Automatic differentiation (AD) breaks a function into a graph of elementary functions (ex: addition, multiplication, or log), and at each step, it calculates the value of both the function and its derivative.
 
-Because the elemental functions are simple, we can calculate the derivative at each step to machine precision, thereby avoiding the stability issues with the numerical approach. Any elemental node simply uses the chain rule to determine its derivative, applying the derivatives from previous nodes along with the symbolic derivative of the elemental function. One should note that an elemental function's derivative is far simpler to define symbolically than that of the complete original function.
+Because the elemental functions are simple, we can calculate the derivative at each step to machine precision, thereby avoiding the stability issues of the numerical approach. Any elemental node simply uses the chain rule to determine its derivative, applying the derivatives from previous nodes along with the symbolic derivative of the elemental function. One should note that an elemental function's derivative is far simpler to define symbolically than that of the complete original function.
 
 The decomposition of the original function into elemental functions is illustrated as a directed graph, with each node representing an elemental function and each edge carrying the results of one elemental function to be used as the inputs for another. As the graph is evaluated, the values are kept within a trace table, showing the function's value and derivative at each step of the AD process.
 
 Once the process has traversed across the entire graph, the final node should have both the value and the derivative of the function at the given point of evaluation. These values will also be available in the final row of the trace table.
 
-The forward mode of automatic differentiation actually computes the product of the Jacobian matrix, $J$, where the $i,j^{th}$ entry is $J_{i,j} = \frac{\partial(f_i)}{\partial(x_j)}$ for function $f_i$ and variable $x_j$, and a seed vector, $p$, which represents the initial derivatives of each variable. The implication of this fact is that if we have a function with two variables $x,y$ and we choose the seed vector $p=(1,0)$, then, the forward mode of automatic differentiation would output $\frac{\partial(f)}{\partial(x)$.
+The forward mode of automatic differentiation actually computes the product of the Jacobian matrix, $J$, where the $i,j^{th}$ entry is $J_{i,j} = \frac{\partial(f_i)}{\partial(x_j)}$ for function $f_i$ and variable $x_j$, and a seed vector, $p$, which represents the initial derivatives of each variable. Thus, if we have a function with two variables $x,y$ and we choose the seed vector $p=(1,0)$, then the forward mode of automatic differentiation would output $\frac{\partial(f)}{\partial(x)$.
 
 To illustrate the forward mode, let's consider the function
 $$f(x,y) = e^xsin(x+2y)$$
