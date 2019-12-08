@@ -332,12 +332,17 @@ We implemented automatic differentiation reverse mode as our extension. Reverse 
 
 ### Implementation
 
-The following functions are supported in reverse mode: exp, ln, log, log2, log10, sqrt, sin, cos, tan, sec, csc, cot, sinh, cosh, tanh, sech, csch, coth
+The following functions are supported in reverse mode: `exp`, `ln`, `log`, `log2`, `log10`, `sqrt`, `sin`, `cos`, `tan`, `sec`, `csc`, `cot`, `sinh`, `cosh`, `tanh`, `sech`, `csch`, `coth`
 
 The `log` function defaults to natural log but has an optional parameter `base` that the user can specify.  
+
 ```python
-# to specify 3 as the log base
-log(x, 3)
+from autodiffpy.reverse import Reverse, log
+
+x = Reverse(9)
+f = log(x, 3) # Specify 3 as the log base
+f.gradient_value = 1.0 # Set seed value
+f.value # Returns 2.0
 ```
 
 ### How to use: Scalars 
@@ -346,7 +351,7 @@ Non-vector operations in reverse mode are almost identical to those in the forwa
 Note that the derivative can be found by calling `get_gradient` in reverse mode, instead of `derivative` as in forward mode.
 
 ```python
-from autodiffpy import Reverse, exp
+from autodiffpy.reverse import Reverse, exp
 
 # Declare reverse variables
 x = Reverse(1)
@@ -356,18 +361,25 @@ func = x * y + exp(x*y)
 # Set seed value
 func.gradient_value = 1.0 
 # Get values and derivatives
-print(func.value)
-print(x.get_gradient())
-print(y.get_gradient())
-
+print(func.value) 
 >>> 9.38905609893065
+print(x.get_gradient())
 >>> 16.7781121978613
+print(y.get_gradient())
 >>> 8.38905609893065
 ```
 
 ### How to use: Vectors
+Vector operations in reverse mode are somewhat different from those in the forward mode. Users should create a list of strings to represent the vector's functions and a dictionary to represent each variable's value. Note that each variable represented in the list of function strings must have a value set in the dictionary.
+
+To get the vector gradient, a user should call `get_gradients`, which returns a list of dictionaries. Each key in the dictionary represents one of function's variables, and each value is the partial derivative of that variable. The function `get_gradients` can also return specific functions or variables using the `func_num` and `var_name` parameters.
+
+The function `find_gradients` can set new variable values using the `variables` parameter. The function returns a dictionary; the keys are the string representation of the vector's functions, and the values are sub-dictionaries containing the partial derivative of each variable.
+
+Vectors can be printed to show each variable's value, along with the partial derivatives for each function. The print statement will be updated if variables are updated via `find_gradients`.
+
 ```python
-from autodiffpy import Reverse, rVector
+from autodiffpy.reverse import Reverse, rVector
 
 # Create list of functions
 func = ['x*2*y+y**3', '2*x**2*y', '3*y']
@@ -376,6 +388,11 @@ vars_dict = {'x': 1, 'y': 2}
 # Declare rVector with function, variables, and values
 vector = rVector(func, vars_dict)
 
+# Get dervatives for each function in vector
+vector.get_gradients()
+>>> [{'x': 4.0, 'y': 14.0}, {'x': 8.0, 'y': 2.0}, {'x': 0, 'y': 3}]
+
+# Print vector to see values and derivatives
 print(vector)
 >>> x=1
 >>> y=2
@@ -385,6 +402,9 @@ print(vector)
 
 # Calculate value and gradients for new variable values
 vector.find_gradients(variables={'x': 5, 'y': 3})
+>>> {'x*2*y+y**3': {'x': 6.0, 'y': 37.0}, '2*x**2*y': {'x': 60.0, 'y': 50.0}, '3*y': {'x': 0, 'y': 3}}
+
+# Print vector to see new values and derivatives
 print(vector)
 >>> x=5
 >>> y=3
