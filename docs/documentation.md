@@ -187,19 +187,9 @@ The `autodiffpy` folder also contains the `reverse.py` file/module. This contain
 
 Tests live under the `autodiffpy/test` folder. They can be run from the top-level of the repository using the singular command `pytest`. Tests are run on every commit to the repository via `TravisCI`. Coverage information is generated via `pytest` directly by invoking with the `pytest --cov=autodiffpy`. Coverage information is stored via a call to `codecov` during the Travis build.
 
-### Installation
-
-A file named `setup.py` has been set up at the top-level of the repository. Installation is thus very simple. If you are within the repository, running
-
-```bash
-pip install .
-```
-
-will install `autodiffpy` into Python.
-
 ## Implementation
 
-Our implementation is heavily inspired by dual numbers but does not actually use the word dual numbers although it is functionally equivalent.
+Our implementation is inspired by dual numbers but does not actually use the words 'dual numbers' — although it is functionally equivalent.
 
 We define a base class called `AutoDiff` in `forward.py` that implements all the dunder methods that are relevant for combining various objects together. The class leaves undefined the `__call__` and `derivative` methods since those are specific to the particular node within the computation graph. The implementation is succinct and included below:
 
@@ -288,7 +278,7 @@ We define a `classmethod` called `coerce` to help in situations where the dunder
 f = 2 * Var('x')
 ```
 
-so that the subexpressions are always themselves `AutoDiff` objects so that when we recurse on them during `.derivative` or `.__call__`, we don't get errors.
+This way, the subexpressions are always themselves `AutoDiff` objects so that when we recurse on them during `.derivative` or `.__call__`, we don't get errors.
 
 For the remainder of the functions, we simply inherit from this `AutoDiff` class and implement the `__call__` and `derivative` methods. We also initialize the relevant attributes of a node. For example, `Add` has a `left` and `right` attribute corresponding to the left and right nodes of the add. `Log` only has a `val` attribute since it only takes in one argument. As an example, here is the `Div` class:
 
@@ -315,7 +305,7 @@ We see that the `.derivative` method follows exactly the same form as the epsilo
 
 The `Constant` and `Var` classes serve as "base cases" for our recursive traversal of the computation graph. At the nodes of the graph, we can either return the constant given, zero, one, or substitute in the value of the variable provided by the user.
 
-It is also worth noting that we completely generalized the derivative of powers so that there is no need for special casing for constant vs variable exponents. This is captured by the `Pow` class, which is implemented as:
+It is worth noting that we completely generalized the derivative of powers so that there is no need for special casing for constant vs variable exponents. This is captured by the `Pow` class, which is implemented as:
 
 ```python
 class Pow(AutoDiff):
