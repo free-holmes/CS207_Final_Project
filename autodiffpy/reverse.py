@@ -127,6 +127,31 @@ def csc(x):
 def cot(x):
     return 1 / tan(x)
 
+def arcsin(x):
+    try:
+        z = Reverse(arcsin(x.value))
+        x.children.append((1/(sqrt(1-x.value**2)), z))
+        return z
+    except AttributeError:
+        return np.arcsin(x)
+
+
+def arccos(x):
+    try:
+        z = Reverse(arccos(x.value))
+        x.children.append((-1/(sqrt(1-x.value**2)), z))
+        return z
+    except AttributeError:
+        return np.arccos(x)
+
+
+def arctan(x):
+    try:
+        z = Reverse(arctan(x.value))
+        x.children.append((1/(1+x.value**2), z))
+        return z
+    except AttributeError:
+        return np.arctan(x)
 
 def exp(x):
     try:
