@@ -1,7 +1,7 @@
 from autodiffpy import Reverse, sin, cos, tan, sec, csc, cot, arcsin, arccos, arctan, exp, sinh, cosh, tanh, sech, csch, coth, ln, log2, log10, log, sqrt, rVector
 from pytest import approx, raises
-
 import numpy as np
+
 
 def test_eq_ne():
     x = Reverse(5)
@@ -161,23 +161,23 @@ def test_cos():
 
 
 def test_arc_trig_funcs():
-    x = Reverse(4)
-    f = arcsin(x)
+    x = Reverse(0.5)
+    f = arcsin(x) + arcsin(0.5)
     f.gradient_value = 1.0
-    assert f.value == approx(np.arcsin(4))
-    assert x.get_gradient() == 1 / np.sqrt(1-4**2)
+    assert f.value == approx(np.arcsin(0.5) + np.arcsin(0.5))
+    assert x.get_gradient() == 1 / np.sqrt(1-0.5**2)
 
-    x = Reverse(5)
-    f = arccos(x)
+    x = Reverse(0.5)
+    f = arccos(x) + arccos(1)
     f.gradient_value = 1.0
-    assert f.value == approx(np.arccos(5))
-    assert x.get_gradient() == - 1 / np.sqrt(1-5**2)
+    assert f.value == approx(np.arccos(0.5) + np.arccos(1))
+    assert x.get_gradient() == - 1 / np.sqrt(1-0.5**2)
 
-    x = Reverse(4)
-    f = arctan(x)
+    x = Reverse(0.2)
+    f = arctan(x) + arctan(0.1)
     f.gradient_value = 1.0
-    assert f.value == approx(np.arctan(4))
-    assert x.get_gradient() == 1 / (1+4**2)
+    assert f.value == approx(np.arctan(0.2) + np.arctan(0.1))
+    assert x.get_gradient() == 1 / (1+0.2**2)
 
 
 def test_log():
@@ -345,4 +345,3 @@ def test_vector():
     assert vector.get_gradients(func_num=0) == {'x': 4.0, 'y': 14.0}
     assert vector.get_gradients(var_name='x') == [4.0, 8.0, 0]
     assert vector.get_gradients() == [{'x': 4.0, 'y': 14.0}, {'x': 8.0, 'y': 2.0}, {'x': 0, 'y': 3}]
-
