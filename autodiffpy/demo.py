@@ -1,9 +1,12 @@
-from autodiffpy.forward import Var
+from autodiffpy.forward import Forward
 
 
 def newtons_method(f, initial_guess=0):
     while True:
-        update = f(x=initial_guess) / f.derivative("x", x=initial_guess)
+        x = Forward("x", initial_guess)
+        updated = f(x)
+
+        update = updated.value / updated.get_gradient("x")
 
         if abs(update) < 10 ** -12:
             break
@@ -14,8 +17,10 @@ def newtons_method(f, initial_guess=0):
 
 
 if __name__ == "__main__":  # pragma: no cover
-    f = Var("x") ** Var("x") - 2
 
-    zero = newtons_method(f, 1)
+    def fun(x):
+        return x ** x - 2
 
-    print(zero, f(x=zero))
+    zero = newtons_method(fun, 1)
+
+    print(zero, fun(zero))
