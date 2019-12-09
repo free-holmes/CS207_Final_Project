@@ -159,23 +159,24 @@ def test_cos():
     assert f.value == approx(np.sin(np.cos(3 * 4)))
     assert x.get_gradient() == approx(-3 * np.sin(12) * np.cos(np.cos(12)))
 
+
 def test_arc_trig_funcs():
     x = Reverse(4)
     f = arcsin(x)
     f.gradient_value = 1.0
-    assert f.value = approx(np.arcsin(4))
+    assert f.value == approx(np.arcsin(4))
     assert x.get_gradient() == 1 / np.sqrt(1-4**2)
 
     x = Reverse(5)
     f = arccos(x)
     f.gradient_value = 1.0
-    assert f.value = approx(np.arccos(5))
+    assert f.value == approx(np.arccos(5))
     assert x.get_gradient() == - 1 / np.sqrt(1-5**2)
 
     x = Reverse(4)
     f = arctan(x)
     f.gradient_value = 1.0
-    assert f.value = approx(np.arctan(4))
+    assert f.value == approx(np.arctan(4))
     assert x.get_gradient() == 1 / (1+4**2)
 
 
