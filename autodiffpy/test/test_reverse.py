@@ -24,7 +24,6 @@ from autodiffpy.reverse import (
     rVector,
 )
 from pytest import approx, raises
-
 import numpy as np
 
 
@@ -189,22 +188,22 @@ def test_cos():
 
 def test_arc_trig_funcs():
     x = Reverse(0.5)
-    f = arcsin(x)
+    f = arcsin(x) + arcsin(0.5)
     f.gradient_value = 1.0
-    assert f.value == approx(np.arcsin(0.5))
+    assert f.value == approx(np.arcsin(0.5) + np.arcsin(0.5))
     assert x.get_gradient() == 1 / np.sqrt(1 - 0.5 ** 2)
 
     x = Reverse(0.5)
-    f = arccos(x)
+    f = arccos(x) + arccos(1)
     f.gradient_value = 1.0
-    assert f.value == approx(np.arccos(0.5))
+    assert f.value == approx(np.arccos(0.5) + np.arccos(1))
     assert x.get_gradient() == -1 / np.sqrt(1 - 0.5 ** 2)
 
-    x = Reverse(4)
-    f = arctan(x)
+    x = Reverse(0.2)
+    f = arctan(x) + arctan(0.1)
     f.gradient_value = 1.0
-    assert f.value == approx(np.arctan(4))
-    assert x.get_gradient() == 1 / (1 + 4 ** 2)
+    assert f.value == approx(np.arctan(0.2) + np.arctan(0.1))
+    assert x.get_gradient() == 1 / (1 + 0.2 ** 2)
 
 
 def test_log():
