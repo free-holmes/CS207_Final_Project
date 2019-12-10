@@ -47,7 +47,10 @@ class Reverse:
         return f"value = {self.value}, gradient_value = {self.gradient_value}"
 
     def __add__(self, other):
-        '''Adds Reverse object to another value
+        '''Adds Reverse object to another value and appends result to children
+
+        Arguments:
+            other {Reverse, Float} -- determines type then adds to self and appends to children
         
         Returns:
             Reverse -- sum of self and other object
@@ -65,6 +68,9 @@ class Reverse:
     def __radd__(self, other):
         '''Calculates reverse add with self and other
         
+        Arguments:
+            other {Reverse, Float} -- calls as input to Reverse.__add__
+        
         Returns:
             Reverse -- sum of self and other object
         '''
@@ -73,6 +79,9 @@ class Reverse:
     def __sub__(self, other):
         '''Returns difference between self and other object by negating other then adding to self
         
+        Arguments:
+            other {Reverse, Float} -- negates then calls as input to Reverse.__add__
+
         Returns:
             Reverse -- difference of self and other
         '''
@@ -80,6 +89,9 @@ class Reverse:
 
     def __rsub__(self, other):
         '''Returns difference between else and other object by negating self then adding to other
+
+        Arguments:
+            other {Reverse, Float} -- adds to self after negating self
         
         Returns:
             Reverse -- difference of self and other
@@ -87,7 +99,10 @@ class Reverse:
         return self.__neg__() + other
 
     def __mul__(self, other):
-        '''Calculates the product of self and other
+        '''Calculates the product of self and other and appends result to children
+
+        Arguments:
+            other {Reverse, Float} -- determines type then multiplies with self and appends to children
         
         Returns:
             Reverse -- product of self and other
@@ -105,6 +120,9 @@ class Reverse:
     def __rmul__(self, other):
         '''Calculates product of self and other
         
+        Arguments:
+            other {Reverse, Float} -- calls as input to Reverse.__mul__
+
         Returns:
             Reverse -- product of self and other
         '''
@@ -112,6 +130,9 @@ class Reverse:
 
     def __truediv__(self, other):
         '''Divides self by other using __mul__ and inverse of other 
+
+        Arguments:
+            other {Reverse, Float} -- divisor
         
         Returns:
             Reverse -- self divided by other
@@ -121,16 +142,22 @@ class Reverse:
     def __rtruediv__(self, other):
         '''Divides other by self using __mul__ and inverse of self
         
+        Arguments:
+            other {Reverse, Float} -- dividend
+
         Returns:
             Reverse -- other divided by self
         '''
         return self.__pow__(-1) * other
 
     def __pow__(self, other):
-        '''Raises self to the other power
+        '''Raises self to the other power and appends result to childen
+
+        Arguments:
+            other {Reverse, Float} -- power to which user will raise self
         
         Returns:
-            Reverse -- Self raised to the other
+            Reverse -- self raised to the other
         '''
         try:
             z = Reverse(self.value ** other.value)
@@ -143,7 +170,10 @@ class Reverse:
             return z
 
     def __rpow__(self, other):
-        '''Calculates other raised to self
+        '''Calculates other raised to self and appends to children
+        
+        Arguments:
+            other {Reverse, Float} -- value being raised to the self power
         
         Returns:
             Reverse -- other raised to self
@@ -163,6 +193,9 @@ class Reverse:
     def __eq__(self, other):
         '''Calculates whether self is equal to other
         
+        Arguments:
+            other {Reverse, Float} -- value being compared to self
+
         Returns:
             Bool -- true if self is equal to other
         '''
@@ -177,6 +210,9 @@ class Reverse:
     def __ne__(self, other):
         '''Calculates whether self is not equal to other
         
+        Arguments:
+            other {Reverse, Float} -- value being compared to self
+
         Returns:
             Bool -- true if self is not equal to other
         '''
@@ -189,10 +225,13 @@ class Reverse:
 
 
 def sin(x):
-    '''Returns sin of given value
+    '''Returns sin of x. Appends result to x.children if x is a Reverse object.
+
+    Arguments:
+        x {Reverse, Float} -- input to sin function
 
     Returns:
-        Reverse or Float -- Only returns Reverse if x is a Reverse object. Else float.
+        {Reverse, Float} -- Only returns Reverse if x is a Reverse object. Else float.
     '''
     try:
         z = Reverse(sin(x.value))
@@ -203,10 +242,13 @@ def sin(x):
 
 
 def cos(x):
-    '''Returns cos of given value
+    '''Returns cos of x. Appends result to x.children if x is a Reverse object.
+
+    Arguments:
+        x {Reverse, Float} -- input to cos function
 
     Returns:
-        Reverse or Float -- Only returns Reverse if x is a Reverse object. Else float.
+        {Reverse, Float} -- Only returns Reverse if x is a Reverse object. Else float.
     '''
     try:
         z = Reverse(cos(x.value))
@@ -217,46 +259,61 @@ def cos(x):
 
 
 def tan(x):
-    '''Returns tan of given value using sin and cos Reverse methods
+    '''Returns tan of x using sin and cos Reverse methods. Appends result to x.children if x is a Reverse object.
+
+    Arguments:
+        x {Reverse, Float} -- input to tan function
 
     Returns:
-        Reverse or Float -- Only returns Reverse if x is a Reverse object. Else float.
+        {Reverse, Float} -- Only returns Reverse if x is a Reverse object. Else float.
     '''
     return sin(x) / cos(x)
 
 
 def sec(x):
-    '''Returns sec of given value using inverse of cos Reverse method
+    '''Returns sec of x using inverse of cos Reverse method. Appends result to x.children if x is a Reverse object.
+
+    Arguments:
+        x {Reverse, Float} -- input to sec function
 
     Returns:
-        Reverse or Float -- Only returns Reverse if x is a Reverse object. Else float.
+        {Reverse, Float} -- Only returns Reverse if x is a Reverse object. Else float.
     '''
     return 1 / cos(x)
 
 
 def csc(x):
-    '''Returns csc of given value using inverse of sin Reverse method
+    '''Returns csc of x using inverse of sin Reverse method. Appends result to x.children if x is a Reverse object.
+
+    Arguments:
+        x {Reverse, Float} -- input to csc function
 
     Returns:
-        Reverse or Float -- Only returns Reverse if x is a Reverse object. Else float.
+        {Reverse, Float} -- Only returns Reverse if x is a Reverse object. Else float.
     '''
     return 1 / sin(x)
 
 
 def cot(x):
-    '''Returns cot of given value using inverse of tan Reverse method
+    '''Returns cot of x using inverse of tan Reverse method. Appends result to x.children if x is a Reverse object.
+
+    Arguments:
+        x {Reverse, Float} -- input to cot function
 
     Returns:
-        Reverse or Float -- Only returns Reverse if x is a Reverse object. Else float.
+        {Reverse, Float} -- Only returns Reverse if x is a Reverse object. Else float.
     '''
     return 1 / tan(x)
 
 
 def exp(x):
-    '''Returns e^x
+    '''Returns e^x. Appends result to x.children if x is a Reverse object.
+
+    Arguments:
+        x {Reverse, Float} -- value to which e is raised
 
     Returns:
-        Reverse or Float -- Only returns Reverse if x is a Reverse object. Else float.
+        {Reverse, Float} -- Only returns Reverse if x is a Reverse object. Else float.
     '''
     try:
         z = Reverse(exp(x.value))
@@ -266,10 +323,13 @@ def exp(x):
         return np.exp(x)
 
 def sinh(x):
-    '''Calculates hyperbolic sin of a given value
+    '''Calculates hyperbolic sin of x. Appends result to x.children if x is a Reverse object.
+
+    Arguments:
+        x {Reverse, Float} -- input to sinh function
 
     Returns:
-        Reverse or Float -- Only returns Reverse if x is a Reverse object. Else float.
+        {Reverse, Float} -- Only returns Reverse if x is a Reverse object. Else float.
     '''
     try:
         z = Reverse(sinh(x.value))
@@ -280,10 +340,13 @@ def sinh(x):
 
 
 def cosh(x):
-    '''Calculates hyperbolic cos of a given value
+    '''Calculates hyperbolic cos of x. Appends result to x.children if x is a Reverse object.
+
+    Arguments:
+        x {Reverse, Float} -- input to cosh function
 
     Returns:
-        Reverse or Float -- Only returns Reverse if x is a Reverse object. Else float.
+        {Reverse, Float} -- Only returns Reverse if x is a Reverse object. Else float.
     '''
     try:
         z = Reverse(cosh(x.value))
@@ -293,49 +356,62 @@ def cosh(x):
         return (exp(x) + exp(-x)) / 2
 
 def tanh(x):
-    '''Calculates hyperbolic tan of a given value using sinh and cosh Reverse methods
+    '''Calculates hyperbolic tan of x using sinh and cosh Reverse methods. Appends result to x.children if x is a Reverse object.
+
+    Arguments:
+        x {Reverse, Float} -- input to tanh function
 
     Returns:
-        Reverse or Float -- Only returns Reverse if x is a Reverse object. Else float.
+        {Reverse, Float} -- Only returns Reverse if x is a Reverse object. Else float.
     '''
     return sinh(x) / cosh(x)
 
 
 def sech(x):
-    '''Calculates hyperbolic sec of a given value using inverse of cosh Reverse method
+    '''Calculates hyperbolic sec of x using inverse of cosh Reverse method. Appends result to x.children if x is a Reverse object.
+
+    Arguments:
+        x {Reverse, Float} -- input to sech function
 
     Returns:
-        Reverse or Float -- Only returns Reverse if x is a Reverse object. Else float.
+        {Reverse, Float} -- Only returns Reverse if x is a Reverse object. Else float.
     '''
     return 1 / cosh(x)
 
 
 def csch(x):
-    '''Calculates hyperbolic csc of a given value using inverse of sinh Reverse method
+    '''Calculates hyperbolic csc of x using inverse of sinh Reverse method. Appends result to x.children if x is a Reverse object.
+
+    Arguments:
+        x {Reverse, Float} -- input to csch function
 
     Returns:
-        Reverse or Float -- Only returns Reverse if x is a Reverse object. Else float.
+        {Reverse, Float} -- Only returns Reverse if x is a Reverse object. Else float.
     '''
     return 1 / sinh(x)
 
 
 def coth(x):
-    '''Calculates hyperbolic cot of a given value using inverse of tanh Reverse method
+    '''Calculates hyperbolic cot of x using inverse of tanh Reverse method. Appends result to x.children if x is a Reverse object.
+
+    Arguments:
+        x {Reverse, Float} -- input to coth function
 
     Returns:
-        Reverse or Float -- Only returns Reverse if x is a Reverse object. Else float.
+        {Reverse, Float} -- Only returns Reverse if x is a Reverse object. Else float.
     '''
     return 1 / tanh(x)
 
 
 def log(x, base=np.exp(1)):
-    '''Calculates base log of a given value. Defaults to natural log.
-    Inputs:
-        x: Reverse or Float -- Value to calculate log.
-        base (default: e): Float -- log base
+    '''Calculates base log of x. Defaults to natural log. Appends result to x.children if x is a Reverse object.
+
+    Arguments:
+        x {Reverse, Float} -- Value to calculate log.
+        base (default: e) {Float} -- log base
 
     Returns:
-        Reverse or Float -- Only returns Reverse if x is a Reverse object. Else float.
+        {Reverse, Float} -- Only returns Reverse if x is a Reverse object. Else float.
     '''
     try:
         z = Reverse(log(x.value, base))
@@ -346,35 +422,47 @@ def log(x, base=np.exp(1)):
 
 
 def ln(x):
-    '''Calculates natural log of a given value using log Reverse method
+    '''Calculates natural log of x using log Reverse method. Appends result to x.children if x is a Reverse object.
+
+    Arguments:
+        x {Reverse, Float} -- Value to calculate natural log.
 
     Returns:
-        Reverse or Float -- Only returns Reverse if x is a Reverse object. Else float.
+        {Reverse, Float} -- Only returns Reverse if x is a Reverse object. Else float.
     '''
     return log(x)
 
 
 def log2(x):
-    '''Calculates log2 of a given value using log Reverse method with 2 base
+    '''Calculates log2 of x using log Reverse method with 2 base. Appends result to x.children if x is a Reverse object.
+
+    Arguments:
+        x {Reverse, Float} -- Value to calculate log2.
 
     Returns:
-        Reverse or Float -- Only returns Reverse if x is a Reverse object. Else float.
+        {Reverse, Float} -- Only returns Reverse if x is a Reverse object. Else float.
     '''
     return log(x, 2)
 
 
 def log10(x):
-    '''Calculates log10 of a given value using log Reverse method with 10 base
+    '''Calculates log10 of x using log Reverse method with 10 base. Appends result to x.children if x is a Reverse object.
+
+    Arguments:
+        x {Reverse, Float} -- Value to calculate log10.
 
     Returns:
-        Reverse or Float -- Only returns Reverse if x is a Reverse object. Else float.
+        {Reverse, Float} -- Only returns Reverse if x is a Reverse object. Else float.
     '''
     return log(x, 10)
 
 
 
 def sqrt(x):
-    ''' Calculates square root of given value
+    ''' Calculates square root of x. Appends result to x.children if x is a Reverse object.
+
+    Arguments:
+        x {Reverse, Float} -- Value to calculate square root for.
 
     Returns:
         Reverse -- Input raised to the 0.5
