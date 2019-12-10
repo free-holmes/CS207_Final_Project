@@ -232,21 +232,21 @@ class rVector():
         # functions = [x*2*y+y**3, 2*x**2*y, 3*y]
         # vector = rVector(functions)
         # print(vector.values)
-        # print(vector.find_gradients(x))
-        # print(vector.find_gradients(y))
+        # print(vector.get_gradients(x))
+        # print(vector.get_gradients(y))
         # >>> [12, 4, 6]
         # >>> [4.0, 8.0, 0]
         # >>> [14.0, 2.0, 3.0]
 
         self.functions = functions
         self.values = []
-        self.find_values()
+        self._find_values()
 
-    def find_values(self):
+    def _find_values(self):
         for i in self.functions:
             self.values.append(i.value)
 
-    def find_gradients(self, variable):
+    def get_gradients(self, variable):
         gradients = []
         for i in self.functions:
             for f in self.functions:
@@ -257,6 +257,3 @@ class rVector():
             variable.reset_gradient()
 
         return gradients
-
-    def get_values(self):
-        return self.values
