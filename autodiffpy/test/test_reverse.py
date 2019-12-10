@@ -1,4 +1,28 @@
-from autodiffpy import Reverse, sin, cos, tan, sec, csc, cot, arcsin, arccos, arctan, exp, sinh, cosh, tanh, sech, csch, coth, ln, log2, log10, log, sqrt, rVector
+from autodiffpy.reverse import (
+    Reverse,
+    sin,
+    cos,
+    tan,
+    sec,
+    csc,
+    cot,
+    arcsin,
+    arccos,
+    arctan,
+    exp,
+    sinh,
+    cosh,
+    tanh,
+    sech,
+    csch,
+    coth,
+    ln,
+    log2,
+    log10,
+    log,
+    sqrt,
+    rVector,
+)
 from pytest import approx, raises
 import numpy as np
 
@@ -16,11 +40,13 @@ def test_eq_ne():
     assert f == g
     assert f != h
 
+
 def test_str():
     x = Reverse(5)
     f = sin(x) + 2
     f.gradient_value = 1.0
-    assert str(f) == 'value = 1.0410757253368614, gradient_value = 1.0'
+    assert str(f) == "value = 1.0410757253368614, gradient_value = 1.0"
+
 
 def test_single_var():
     x = Reverse(1) + 2
@@ -165,19 +191,19 @@ def test_arc_trig_funcs():
     f = arcsin(x) + arcsin(0.5)
     f.gradient_value = 1.0
     assert f.value == approx(np.arcsin(0.5) + np.arcsin(0.5))
-    assert x.get_gradient() == 1 / np.sqrt(1-0.5**2)
+    assert x.get_gradient() == 1 / np.sqrt(1 - 0.5 ** 2)
 
     x = Reverse(0.5)
     f = arccos(x) + arccos(1)
     f.gradient_value = 1.0
     assert f.value == approx(np.arccos(0.5) + np.arccos(1))
-    assert x.get_gradient() == - 1 / np.sqrt(1-0.5**2)
+    assert x.get_gradient() == -1 / np.sqrt(1 - 0.5 ** 2)
 
     x = Reverse(0.2)
     f = arctan(x) + arctan(0.1)
     f.gradient_value = 1.0
     assert f.value == approx(np.arctan(0.2) + np.arctan(0.1))
-    assert x.get_gradient() == 1 / (1+0.2**2)
+    assert x.get_gradient() == 1 / (1 + 0.2 ** 2)
 
 
 def test_log():
@@ -251,6 +277,16 @@ def test_sqrt():
     assert x.get_gradient() == approx(0.5 * (2 ** (-0.5)))
 
 
+def test_pos():
+    x = Reverse(3)
+
+    f = +(x * x)
+    f.gradient_value = 1
+
+    assert f.value == approx(9)
+    assert x.get_gradient() == approx(2 * 3)
+
+
 def test_other_trig_funcs():
     x = Reverse(2)
     f = sinh(x) + sinh(2)
@@ -290,10 +326,26 @@ def test_other_trig_funcs():
     assert f.value == approx(2 * (np.cosh(2) / np.sinh(2)))
     assert x.get_gradient() == approx(-1 / (np.sinh(2) ** 2))
 
+
+def test_vector_simple():
+    x = Reverse(-3)
+    y = Reverse(2)
+
+    vector = rVector([x ** 2, x + y * x])
+
+    assert vector.values == approx([9, -3 + 2 * -3])
+
+    x_grad = vector.get_gradients(x)
+    y_grad = vector.get_gradients(y)
+
+    assert x_grad == approx([2 * -3, 1 + 2])
+    assert y_grad == approx([0, -3])
+
+
 def test_vector():
     x = Reverse(1)
     y = Reverse(2)
-    functions = [x*2*y+y**3, 2*x**2*y, 3*y]
+    functions = [x * 2 * y + y ** 3, 2 * x ** 2 * y, 3 * y]
     vector = rVector(functions)
 
     # Check for get_values()
