@@ -1,10 +1,18 @@
-# Group 13 - Documentation
+# Group 13 - Documentation of `autodiffpy`
 
 ## Introduction
 
-Our software aims to compute derivatives accurately and in a cost-efficient manner. Our Python package, `autodiffpy`, implements the forward and reverse modes of automatic differentiation. This computation is important because it overcomes the limitations of symbolic differentiation (computationally intensive) and the finite difference method (inaccurate/unstable).
+Our software aims to compute derivatives accurately and in a cost-efficient
+manner. Our Python package, `autodiffpy`, implements the forward and reverse
+modes of automatic differentiation. This computation is important because it
+overcomes the limitations of symbolic differentiation (computationally
+intensive) and the finite difference method (inaccurate/unstable).
 
-Derivatives are highly important in numerical algebra. We can use derivatives to find the roots of differentiable functions or the minima of other functions. This second use case has become increasingly important in the field of machine learning where optimizing and "learning" in deep neural networks requires finding local minima of highly nested functions.
+Derivatives are highly important in numerical algebra. We can use derivatives
+to find the roots of differentiable functions or the minima of other
+functions. This second use case has become increasingly important in the
+field of machine learning where optimizing and "learning" in deep neural
+networks requires finding local minima of highly nested functions.
 
 ## Background
 
@@ -30,7 +38,7 @@ The trace table is shown below.
 
 It is evident from the trace table that the final value of the function is 0, while the partial derivatives with respective to $x$ and $y$ are -1 and -2, respectively.
 
-One should note that the forward mode of automatic differentiation is more efficient when the number of outputs far exceeds the number of inputs. 
+One should note that the forward mode of automatic differentiation is more efficient when the number of outputs far exceeds the number of inputs.
 
 ## How to Use `autodiffpy`
 
@@ -42,108 +50,49 @@ You can install `autodiffpy` from `PyPI` by running `pip` from the command line.
 pip install autodiffpy-free-holmes
 ```
 
-Alternatively, you can install the package directly from GitHub.
+Alternatively, you can install the package directly from our GitHub repository.
 
 ```bash
 pip install git+git://github.com/free-holmes/cs207-FinalProject.git
 ```
 
-### Basic Usage
+### Basic Demo
 
 This section assumes a user will be working with the forward mode of automatic differentiation. Further instructions on reverse mode can be found in the extension section.
 
-A user will most likely import two important exports from our package
+To access the forward mode, a user can import the `Forward` class from the `autodiffpy.forward` module.
 
 ```python
-from autodiffpy.forward import Var, Vector
+from autodiffpy.forward import Forward
 ```
 
-The `Var` class can be used to instantiate abstract variables that can be differentiated later. For example, if we wanted to represent the function f(x) = x, we would write
+The `Forward` class can be used to instantiate a variable along with its
+initial value. In our demo, suppose we want to evaluate and find the
+derivative of the function f(x) = sin(x^2) at the point x = 2. Then we would need
 
 ```python
-f = Var('x')
+from autodiffpy.forward import Forward, sin
+x = Forward('x', 2)
+f = sin(x ** 2)
+
+print(f.value) # get the value of the function at x = 2
+print(f.get_gradient('x')) # get the derivative of the function at x = 2
 ```
 
-To create interesting functions, the user can just directly use the standard mathematical operations on our `Var` object. For example, if we wanted to represent the function f(x) = x^2 + 3x - x / 4, we would write
+Note the use of the special import `sin` from the module as well. There are many other elementary functions defined within the module that allow users to take the derivative of those functions. These will be elaborted on in the Implementation section.
+
+If the user wants functions of multiple inputs and outputs, they can use the `fVector` constructor from the module in conjunction with multiple `Forward` object instances. For example,
 
 ```python
-x = Var('x')
-f = x ** 2 + 3 * x - x / 4
-```
+from autodiffpy.forward import Forward, fVector
+x = Forward('x', 2)
+y = Forward('y', -3)
 
-If the user would like to use trignometric methods or log, they can import those objects from `autodiffpy`. For example, if we wanted to represent f(x) = cos(sin(2x)), we would write
+f = fVector([x * y, x + y]) # represents f(x, y) = (xy, x + y)
 
-```python
-from autodiffpy.forward import Sin, Cos, Var
-f = Cos(Sin(2 * Var('x')))
-```
-
-The user can also have multiple variables. If our function was f(x, y) = x^(2y), we would write
-
-```python
-x = Var('x')
-y = Var('y')
-f = x ** (2 * y)
-```
-
-If the user would like to have a multidimensional output, they can combine multiple functions using the `Vector` class. Suppose our function was f(x, y) = (y^2, xy), we would write this as
-
-```python
-from autodiffpy.forward import Var, Vector
-x = Var('x')
-y = Var('y')
-f = Vector([y ** 2, x * y])
-```
-
-If the user would like to have a function which is a constant, they can do that as well with the `Constant` export. Suppose we want f(x) = 1. That can be represented by
-
-```python
-from autodiffpy.forward import Constant
-f = Constant(1)
-```
-
-To get the value of a function at a particular point, the user can simply call the constructed function objects with keyword arguments. Note that the `x` and `y` in the keyword arguments are _not_ hardcoded; they correspond to the variables that are bound via `Var` constructors. For example,
-
-```python
-x = Var('x')
-y = Var('y')
-f = Vector([y ** 2, x * y])
-f(x=1, y=2) # Returns [4, 2]
-
-z = Var('z')
-f = z ** z
-f(z=3) # Returns 27
-```
-
-To get the derivative, the user can call `.derivative` on the `AutoDiff` object and pass in the variable to differentiate with respect to as well as the point they would like to get the derivative at. Again, the keyword arguments must correspond to the variables that are bound into the function.
-
-```python
-x = Var('x')
-y = Var('y')
-f = Vector([y ** 2, x * y])
-f.derivative('x', x=1, y=2) # Returns [0, 2]
-f.derivative('y', x=1, y=2) # Returns [4, 1]
-```
-
-### Quick Demo
-
-Suppose we are interested in modeling the wacky function f(x) = x^x. We would create the function as thus:
-
-```python
-from autodiffpy.forward import Var
-f = Var('x') ** Var('x')
-```
-
-To evaluate this function at f(4), we would write
-
-```python
-f(x=4) # Returns 256
-```
-
-and to get the derivative at the point, f'(4), we would write
-
-```python
-f.derivative('x', x=4) # Returns approximately 610.89
+print(f.value) # returns [-6, -1]
+print(f.get_gradient('x')) # returns [-3, 1]
+print(f.get_gradient('y')) # returns [2, 1]
 ```
 
 ## Software Organization
@@ -179,176 +128,205 @@ cs207-FinalProject/
 
 The primary exported module is `autodiffpy` which lives in its entirety under the `autodiffpy` folder. This contains all the publicly accessible interfaces.
 
-Under the `autodiffpy` folder is the `forward.py` file/module. This contains the logic and implementation of the forward mode of automatic differentiation. It defines the various "nodes" in our computation graph including the interesting elementary functions like Log and the trig functions.
+Under the `autodiffpy` folder is the `forward.py` file/module. This contains the logic and implementation of the forward mode of automatic differentiation. It defines the `Forward` class and elementary functions that can be used to chain together complicated and interesting functions while simultaneously computing their gradient.
 
-The `autodiffpy` folder also contains the `reverse.py` file/module. This contains the logic and implementation of the reverse mode of automatic differentiation. 
+The `autodiffpy` folder also contains the `reverse.py` file/module. This contains the logic and implementation of the reverse mode of automatic differentiation, which is our extension feature.
 
 ### Tests
 
-Tests live under the `autodiffpy/test` folder. They can be run from the top-level of the repository using the singular command `pytest`. Tests are run on every commit to the repository via `TravisCI`. Coverage information is generated via `pytest` directly by invoking with the `pytest --cov=autodiffpy`. Coverage information is stored via a call to `codecov` during the Travis build.
+Tests live under the `autodiffpy/test` folder. They can be run from the
+top-level of the repository by doing the following:
+
+```bash
+pip install -r developer-requirements.txt
+python -m pytest --cov=autodiffpy --cov-report=term-missing
+```
+
+Tests are run on every commit to the repository via `TravisCI`. Coverage information is
+generated via the above call to `pytest`. Coverage information is stored via a call to `codecov`
+during the Travis build.
+
+### Deployment
+
+The `autodiffpy-free-holmes` Python package is automatically uploaded to `PyPI` upon each push to master with a version bump.
 
 ## Implementation
 
-Our implementation is inspired by dual numbers but does not actually use the words 'dual numbers' — although it is functionally equivalent.
+### The `Forward` class
 
-We define a base class called `AutoDiff` in `forward.py` that implements all the dunder methods that are relevant for combining various objects together. The class leaves undefined the `__call__` and `derivative` methods since those are specific to the particular node within the computation graph. The implementation is succinct and included below:
+As mentioned in the Demo section, the main object of interest is the
+`Forward` class defined in the `autodiffpy.forward` module. This class allows
+us to construct variables that can then be chained together with standard Python mathematical operations as well as several elementary functions that we define.
+
+If the `Forward` class is constructed with two arguments, the first must be the name of the variable and the second must be the initial value of the variable. As an example:
 
 ```python
-class AutoDiff:
-    def __init__(self):
-        pass
-
-    def __call__(self, **kwargs):
-        """Not implemented"""
-
-    def derivative(self, *variables, **kwargs):
-        """Not implemented"""
-
-    @classmethod
-    def coerce(self, thing):
-        if isinstance(thing, AutoDiff):
-            return thing
-
-        if isinstance(thing, (float, int)):
-            return Constant(thing)
-
-        if isinstance(thing, str):
-            return Var(thing)
-
-        raise ValueError
-
-    def __add__(self, other):
-        return Add(self, AutoDiff.coerce(other))
-
-    def __radd__(self, other):
-        return Add(AutoDiff.coerce(other), self)
-
-    def __sub__(self, other):
-        return Sub(self, AutoDiff.coerce(other))
-
-    def __rsub__(self, other):
-        return Sub(AutoDiff.coerce(other), self)
-
-    def __mul__(self, other):
-        return Mul(self, AutoDiff.coerce(other))
-
-    def __rmul__(self, other):
-        return Mul(AutoDiff.coerce(other), self)
-
-    def __truediv__(self, other):
-        return Div(self, AutoDiff.coerce(other))
-
-    def __rtruediv__(self, other):
-        return Div(AutoDiff.coerce(other), self)
-
-    def __pow__(self, other):
-        return Pow(self, AutoDiff.coerce(other))
-
-    def __rpow__(self, other):
-        return Pow(AutoDiff.coerce(other), self)
-
-    def __eq__(self, other):
-        return Eq(self, AutoDiff.coerce(other))
-
-    def __lt__(self, other):
-        return Lt(self, AutoDiff.coerce(other))
-
-    def __gt__(self, other):
-        return Gt(self, AutoDiff.coerce(other))
-
-    def __le__(self, other):
-        return Le(self, AutoDiff.coerce(other))
-
-    def __ge__(self, other):
-        return Ge(self, AutoDiff.coerce(other))
-
-    def __ne__(self, other):
-        return Ne(self, AutoDiff.coerce(other))
-
-    def __neg__(self):
-        return Sub(AutoDiff.coerce(0), self)
-
-    def __pos__(self):
-        return Add(AutoDiff.coerce(0), self)
+from autodiffpy.forward import Forward
+x = Forward('x', 2)
 ```
 
-We define a `classmethod` called `coerce` to help in situations where the dunder method is called with a float or integer such as
+This defines a variable `x` with initial value `2`. If the `Forward` class is constructed with one argument, it must be a numeric type. This is how constants can be defined in our forward differentiation. For example
 
 ```python
-f = 2 * Var('x')
+c = Forward(3)
 ```
 
-This way, the subexpressions are always themselves `AutoDiff` objects so that when we recurse on them during `.derivative` or `.__call__`, we don't get errors.
+This creates a constant with value 3.
 
-For the remainder of the functions, we simply inherit from this `AutoDiff` class and implement the `__call__` and `derivative` methods. We also initialize the relevant attributes of a node. For example, `Add` has a `left` and `right` attribute corresponding to the left and right nodes of the add. `Log` only has a `val` attribute since it only takes in one argument. As an example, here is the `Div` class:
+### Standard Python operators
+
+A user can then use the standard Python operators to combine these `Forward` objects with other forward objects or numeric Python constants to actually compute the output of functions. All operators including `+`, `-` (both unary and binary), `*`, `/`, `**` are all supported.
 
 ```python
-class Div(AutoDiff):
-    def __init__(self, top, bottom):
-        super().__init__()
-
-        self.top = top
-        self.bottom = bottom
-
-    def __call__(self, **kwargs):
-        return self.top(**kwargs) / self.bottom(**kwargs)
-
-    def derivative(self, *args, **kwargs):
-        g = self.bottom(**kwargs)
-        return (
-            self.top.derivative(*args, **kwargs) * g
-            - self.top(**kwargs) * self.bottom.derivative(*args, **kwargs)
-        ) / g ** 2
+x = Forward('x', -2.5)
+f = -(x - 2) * (x + 3) ** 4 / (2 ** x)
 ```
 
-We see that the `.derivative` method follows exactly the same form as the epsilon coefficient in the `Dual` methods.
+### Accessing the Result and Gradient
 
-The `Constant` and `Var` classes serve as "base cases" for our recursive traversal of the computation graph. At the nodes of the graph, we can either return the constant given, zero, one, or substitute in the value of the variable provided by the user.
-
-It is worth noting that we completely generalized the derivative of powers so that there is no need for special casing for constant vs variable exponents. This is captured by the `Pow` class, which is implemented as:
+The resulting `f` above is also a `Forward` object. To actually access the result of the computation and the gradient with respect to `x`, we can look at the `.value` property and use the `.get_gradient` method.
 
 ```python
-class Pow(AutoDiff):
-    def __init__(self, base, exp):
-        super().__init__()
-        self.base = base
-        self.exp = exp
+print(f.value)
+>>> 1.590990257669732
+print(f.get_gradient('x'))
+>>> 11.271578259362466
+```
 
-    def __call__(self, **kwargs):
-        return self.base(**kwargs) ** self.exp(**kwargs)
+Note that `.get_gradient` accepts as its parameter the name of the variable that we want the gradient with respect to.
 
-    def derivative(self, *args, **kwargs):
-        a, b = self.base(**kwargs), self.base.derivative(*args, **kwargs)
-        c, d = self.exp(**kwargs), self.exp.derivative(*args, **kwargs)
-        return a ** c * (d * np.log(a) + b * c / a)
+### Comparisons
+
+In addition to the mathematical Python operators, we also support the comparison of `Forward` objects via the standard comparison operators. This simply compares the output value of expressions.
+
+```python
+x = Forward('x', -3)
+x == x # True
+x != x # False
+x ** 2 > x # True
+```
+
+### Elementary Functions
+
+The `autodiffpy.forward` module also comes with many elementary functions including
+
+- trigonometric functions and their inverses
+- hyperbolic functions
+- exponential function
+- logistic function
+- logarithms of any base
+- square root function
+
+These are exported from `uutodiffpy.forward` under the standard names like
+`sin`, `cos`, `sinh`, `csch`, `logistic`, `exp`, `ln`, etc. We can apply
+these elementary functions to the `Forward` objects to get more interesting
+derivatives. As an example:
+
+```python
+from autodiffpy.forward import Forward, sin, logistic
+x = Forward('x', -23)
+f = sin(logistic(x))
+
+print(f.value, f.get_gradient('x'))
+>>> 1.0261879630648841e-10 1.0261879629595781e-10
+```
+
+### Functions of Multiple Inputs
+
+By defining other `Forward` objects with different variable names, the user
+can create functions that take in multiple inputs. The name can be anything. As an example:
+
+```python
+from autodiffpy.forward import Forward
+x = Forward('x', -2)
+y = Forward('y', 3)
+
+f = x + y + x * y
+print(f.value, f.get_gradient('x'), f.get_gradient('y'), f.get_gradient('z'))
+>>> -5 4 -1 0
+```
+
+### Functions of Multiple Outputs
+
+We can also define a function with multiple or vector output by using our `fVector` constructor that is included in `autodiffpy.forward`. The `fVector` accepts an array of expressions as its argument. To access the value is the same as the `Forward` object, simply use `.value` and `.get_gradient`.
+
+```python
+from autodiffpy.forward import fVector
+
+x = Forward('x', -3)
+y = Forward('y', 2)
+
+f = fVector([x + y, x * y])
+
+print(f.value, f.get_gradient('x'), f.get_gradient('y'))
+>>> [-1, -6] [1, 2] [1, -3]
 ```
 
 ### External Dependencies
 
-We only rely on `numpy` as our external dependency. We use `numpy` to compute the trigonometric functions and log. We also use `numpy` to return arrays when the result of an evaluation is a vector.
+We only rely on `numpy` as our external dependency. We use `numpy` to compute
+the values of our elementary functions including the trig and inverse trig
+functions, log, exp, hyperbolic functions, and the logistic function.
 
 ## Extension: Reverse Mode
-We implemented automatic differentiation reverse mode as our extension. Reverse mode can be more efficient than forward mode when there are far more inputs than outputs.
+
+We implemented automatic differentiation reverse mode as our extension.
+Reverse mode can be more efficient than forward mode when there are far more
+inputs than outputs.
+
+### Mathematical Background
+
+In the forward mode of automatic differentiation, we start at the inputs and
+apply the chain rule going forward through the implicit computational graph.
+At each "node" in the graph, we take the derivative with respect to the input
+parameter until we reach the final node in the graph. At this point we will
+have our final derivative of interest.
+
+The reverse mode, as the name implies, works in the opposite direction. We
+start by initializing the final node in the graph with a gradient value of 1.
+We then can, in a sense, work backwards from that node to derive the gradient
+at all other nodes. This is relying on a form of the chain rule.
+
+At each node, `w_i`, we compute the derivative `df/dw_i` by breaking this into
+
+```
+df/dw_i = df/dw_{i + 1} * dw_{i + 1}/dw_i
+```
+
+in the case that the node only has one child. This generalizes in the case where the node has two children. We
+can continue to unwrap the value `df/dw_i` recurisvely until we reach `df/dw_n` which we know is 1.
+
+Since the reverse mode can propagate backwards the gradient from a single
+output to potentially multiple inputs, it can be efficient when there is one
+output but multiple inputs.
 
 ### Implementation
 
-The following functions are supported in reverse mode: `exp`, `ln`, `log`, `log2`, `log10`, `sqrt`, `sin`, `cos`, `tan`, `sec`, `csc`, `cot`, `sinh`, `cosh`, `tanh`, `sech`, `csch`, `coth`
+The following functions are supported in reverse mode: `exp`, `ln`, `log`,
+`log2`, `log10`, `sqrt`, `sin`, `cos`, `tan`, `sec`, `csc`, `cot`, `sinh`,
+`cosh`, `tanh`, `sech`, `csch`, `coth`
 
-The `log` function defaults to natural log but has an optional parameter `base` that the user can specify.  
+The `log` function defaults to natural log but has an optional parameter `base` that the user can specify.
 
 ```python
 from autodiffpy.reverse import Reverse, log
 
 x = Reverse(9)
 f = log(x, 3) # Specify 3 as the log base
-f.gradient_value = 1.0 # Set seed value
+f.gradient_value = 1.0 # Set seed value, very important!!!!!!
 f.value # Returns 2.0
 ```
 
-### How to use: Scalars 
-Non-vector operations in reverse mode are almost identical to those in the forward mode. The primary difference is that we now utilize a `Reverse` object instead of a `Var` object. In addition, the user must seed the function, typically with a value of `1`.
+### How to use: Scalars
 
-Note that the derivative can be found by calling `get_gradient` in reverse mode, instead of `derivative` as in forward mode.
+Non-vector operations in reverse mode are almost identical to those in the
+forward mode. The primary difference is that we now utilize a `Reverse`
+object instead of a `Forward` object. In addition, the user must seed the
+gradient of the function, typically with a value of `1`.
+
+Note that the derivative can be found by calling `get_gradient` in reverse
+mode on the _variable_, while in the forward mode it was found by calling
+`get_gradient` on the function result.
 
 ```python
 from autodiffpy.reverse import Reverse, exp
@@ -356,12 +334,15 @@ from autodiffpy.reverse import Reverse, exp
 # Declare reverse variables
 x = Reverse(1)
 y = Reverse(2)
+
 # Declare function
 func = x * y + exp(x*y)
+
 # Set seed value
-func.gradient_value = 1.0 
+func.gradient_value = 1.0
+
 # Get values and derivatives
-print(func.value) 
+print(func.value)
 >>> 9.38905609893065
 print(x.get_gradient())
 >>> 16.7781121978613
@@ -370,13 +351,16 @@ print(y.get_gradient())
 ```
 
 ### How to use: Vectors
-Vector operations in reverse mode are somewhat different from those in the forward mode. Users should create a list of strings to represent the vector's functions and a dictionary to represent each variable's value. Note that each variable represented in the list of function strings must have a value set in the dictionary.
 
-To get the vector gradient, a user should call `get_gradients`, which returns a list of dictionaries. Each key in the dictionary represents one of function's variables, and each value is the partial derivative of that variable. The function `get_gradients` can also return specific functions or variables using the `func_num` and `var_name` parameters.
+Vector operations in reverse mode are somewhat different from those in the
+forward mode. Users should createa list of expressions using the `Reverse`
+objects in conjunction with the standard Python mathematical operators.
 
-The function `find_gradients` can set new variable values using the `variables` parameter. The function returns a dictionary; the keys are the string representation of the vector's functions, and the values are sub-dictionaries containing the partial derivative of each variable.
-
-Vectors can be printed to show each variable's value, along with the partial derivatives for each function. The print statement will be updated if variables are updated via `find_gradients`.
+To get the vector gradient, a user should call `get_gradients` and pass in
+the input `Reverse` object that they want the gradient of. This will return a
+list of values, which represent the gradient of the vector of functions with
+respect to each element of the vector. To get the value of the vector, the
+user can simply access `.values` on the vector object.
 
 ```python
 from autodiffpy.reverse import Reverse, rVector
@@ -386,7 +370,7 @@ x = Reverse(1)
 y = Reverse(2)
 
 # Create list of functions
-functions = [x*2*y+y**3, 2*x**2*y, 3*y]
+functions = [x * 2 * y + y ** 3, 2 * x ** 2 * y, 3 * y]
 vector = rVector(functions)
 
 # Get values and derivatives
