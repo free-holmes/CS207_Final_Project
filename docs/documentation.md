@@ -381,46 +381,20 @@ Vectors can be printed to show each variable's value, along with the partial der
 ```python
 from autodiffpy.reverse import Reverse, rVector
 
+# Declare reverse variables
+x = Reverse(1)
+y = Reverse(2)
+
 # Create list of functions
-func = ['x*2*y+y**3', '2*x**2*y', '3*y']
-# Create dictionary of variables and values
-vars_dict = {'x': 1, 'y': 2} 
-# Declare rVector with function, variables, and values
-vector = rVector(func, vars_dict)
+functions = [x*2*y+y**3, 2*x**2*y, 3*y]
+vector = rVector(functions)
 
-# Get dervatives for each function in vector
-vector.get_gradients()
->>> [{'x': 4.0, 'y': 14.0}, {'x': 8.0, 'y': 2.0}, {'x': 0, 'y': 3}]
+# Get values and derivatives
+print(vector.values)
+print(vector.get_gradients(x))
+print(vector.get_gradients(y))
 
-# Print vector to see values and derivatives
-print(vector)
->>> x=1
->>> y=2
->>> x*2*y+y**3=12.0  Df(x)=4.0  Df(y)=14.0
->>> 2*x**2*y=4.0  Df(x)=8.0  Df(y)=2.0
->>> 3*y=6.0  Df(x)=0  Df(y)=3
-
-# Calculate value and gradients for new variable values
-vector.find_gradients(variables={'x': 5, 'y': 3})
->>> {'x*2*y+y**3': {'x': 6.0, 'y': 37.0}, '2*x**2*y': {'x': 60.0, 'y': 50.0}, '3*y': {'x': 0, 'y': 3}}
-
-# Print vector to see new values and derivatives
-print(vector)
->>> x=5
->>> y=3
->>> x*2*y+y**3=57.0  Df(x)=6.0  Df(y)=37.0
->>> 2*x**2*y=150.0  Df(x)=60.0  Df(y)=50.0
->>> 3*y=9.0  Df(x)=0  Df(y)=3
-
-# Get gradient of specific function and variable
-vector.get_gradients(func_num=0, var_name='x')
->>> 6.0
-
-# Get gradient of one variable from all functions
-vector.get_gradients(var_name='x')
->>> [6.0, 60.0, 0]
-
-# Get gradient of all variables from one function
-vector.get_gradients(func_num=0)
->>> {'x': 6.0, 'y': 37.0}
+>>> [12, 4, 6]
+>>> [4.0, 8.0, 0]
+>>> [14.0, 2.0, 3.0]
 ```
