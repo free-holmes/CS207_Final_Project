@@ -300,4 +300,4 @@ def test_vector():
     assert vector.values == [12, 4, 6]
     # Check for get_gradients()
     assert vector.get_gradients(x) == [4.0, 8.0, 0]
-    assert vector.get_gradients(x) == [14.0, 2.0, 3.0]
+    assert vector.get_gradients(y) == [14.0, 2.0, 3.0]
