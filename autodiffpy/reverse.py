@@ -13,6 +13,10 @@ class Reverse:
         self.children = []
         self.gradient_value = None
 
+    """Returns gradient value.
+
+        Sets gradient_value if none is specified.
+    """
     def get_gradient(self):
         if self.gradient_value is None:
             self.gradient_value = sum(
@@ -20,9 +24,19 @@ class Reverse:
             )
         return self.gradient_value
 
+    """Sets string output for Revese object
+    
+    Returns:
+        string -- displays value and gradient_value
+    """
     def __str__(self):
         return f"value = {self.value}, gradient_value = {self.gradient_value}"
 
+    """Adds Reverse object to another value
+    
+    Returns:
+        Reverse -- sum of self and other object
+    """
     def __add__(self, other):
         try:
             z = Reverse(self.value + other.value)
@@ -33,16 +47,35 @@ class Reverse:
             z = Reverse(self.value + other)
             self.children.append((1, z))
             return z
-
+    """Calculates reverse add with self and other
+    
+    Returns:
+        Reverse -- sum of self and other object
+    """
     def __radd__(self, other):
         return self.__add__(other)
 
+    """Returns difference between self and other object by negating other then adding to self
+    
+    Returns:
+        Reverse -- difference of self and other
+    """
     def __sub__(self, other):
         return self.__add__(-other)
 
+    """Returns difference between else and other object by negating self then adding to other
+    
+    Returns:
+        Reverse -- difference of self and other
+    """
     def __rsub__(self, other):
         return self.__neg__() + other
 
+    """Calculates the product of self and other
+    
+    Returns:
+        Reverse -- product of self and other
+    """
     def __mul__(self, other):
         try:
             z = Reverse(self.value * other.value)
@@ -54,15 +87,35 @@ class Reverse:
             self.children.append((other, z))
             return z
 
+    """Calculates product of self and other
+    
+    Returns:
+        Reverse -- product of self and other
+    """
     def __rmul__(self, other):
         return self.__mul__(other)
 
+    """Divides self by other using __mul__ and inverse of other 
+    
+    Returns:
+        Reverse -- self divided by other
+    """
     def __truediv__(self, other):
         return self.__mul__(other ** (-1))
 
+    """Divides other by self using __mul__ and inverse of self
+    
+    Returns:
+        Reverse -- other divided by self
+    """
     def __rtruediv__(self, other):
         return self.__pow__(-1) * other
 
+    """Raises self to the other power
+    
+    Returns:
+        Reverse -- Self raised to the other
+    """
     def __pow__(self, other):
         try:
             z = Reverse(self.value ** other.value)
@@ -74,14 +127,29 @@ class Reverse:
             self.children.append((other * self.value ** (other - 1), z))
             return z
 
+    """Calculates other raised to self
+    
+    Returns:
+        Reverse -- other raised to self
+    """
     def __rpow__(self, other):
         z = Reverse(other ** self.value)
         self.children.append((other ** self.value * np.log(other), z))
         return z
 
+    """Negates self
+    
+    Returns:
+        Reverse -- self negated
+    """
     def __neg__(self):
         return self.__mul__(-1)
 
+    """Calculates whether self is equal to other
+    
+    Returns:
+        Bool -- true if self is equal to other
+    """
     def __eq__(self, other):
         try:
             return (
@@ -91,6 +159,11 @@ class Reverse:
         except AttributeError:
             return self.value == other
 
+    """Calculates whether self is not equal to other
+    
+    Returns:
+        Bool -- true if self is not equal to other
+    """
     def __ne__(self, other):
         try:
             return (
@@ -100,6 +173,11 @@ class Reverse:
             return self.value != other
 
 
+"""Returns sin of given value
+
+Returns:
+    Reverse or Float -- Only returns Reverse if x is a Reverse object. Else float.
+"""
 def sin(x):
     try:
         z = Reverse(sin(x.value))
@@ -109,6 +187,11 @@ def sin(x):
         return np.sin(x)
 
 
+"""Returns cos of given value
+
+Returns:
+    Reverse or Float -- Only returns Reverse if x is a Reverse object. Else float.
+"""
 def cos(x):
     try:
         z = Reverse(cos(x.value))
@@ -118,22 +201,47 @@ def cos(x):
         return np.cos(x)
 
 
+"""Returns tan of given value using sin and cos Reverse methods
+
+Returns:
+    Reverse or Float -- Only returns Reverse if x is a Reverse object. Else float.
+"""
 def tan(x):
     return sin(x) / cos(x)
 
 
+"""Returns sec of given value using inverse of cos Reverse method
+
+Returns:
+    Reverse or Float -- Only returns Reverse if x is a Reverse object. Else float.
+"""
 def sec(x):
     return 1 / cos(x)
 
 
+"""Returns csc of given value using inverse of sin Reverse method
+
+Returns:
+    Reverse or Float -- Only returns Reverse if x is a Reverse object. Else float.
+"""
 def csc(x):
     return 1 / sin(x)
 
 
+"""Returns cot of given value using inverse of tan Reverse method
+
+Returns:
+    Reverse or Float -- Only returns Reverse if x is a Reverse object. Else float.
+"""
 def cot(x):
     return 1 / tan(x)
 
 
+"""Returns e^x
+
+Returns:
+    Reverse or Float -- Only returns Reverse if x is a Reverse object. Else float.
+"""
 def exp(x):
     try:
         z = Reverse(exp(x.value))
@@ -142,7 +250,11 @@ def exp(x):
     except AttributeError:
         return np.exp(x)
 
+"""Calculates hyperbolic sin of a given value
 
+Returns:
+    Reverse or Float -- Only returns Reverse if x is a Reverse object. Else float.
+"""
 def sinh(x):
     try:
         z = Reverse(sinh(x.value))
@@ -152,6 +264,11 @@ def sinh(x):
         return (exp(x) - exp(-x)) / 2
 
 
+"""Calculates hyperbolic cos of a given value
+
+Returns:
+    Reverse or Float -- Only returns Reverse if x is a Reverse object. Else float.
+"""
 def cosh(x):
     try:
         z = Reverse(cosh(x.value))
@@ -160,37 +277,51 @@ def cosh(x):
     except AttributeError:
         return (exp(x) + exp(-x)) / 2
 
+"""Calculates hyperbolic tan of a given value using sinh and cosh Reverse methods
 
+Returns:
+    Reverse or Float -- Only returns Reverse if x is a Reverse object. Else float.
+"""
 def tanh(x):
     return sinh(x) / cosh(x)
 
 
+"""Calculates hyperbolic sec of a given value using inverse of cosh Reverse method
+
+Returns:
+    Reverse or Float -- Only returns Reverse if x is a Reverse object. Else float.
+"""
 def sech(x):
     return 1 / cosh(x)
 
 
+"""Calculates hyperbolic csc of a given value using inverse of sinh Reverse method
+
+Returns:
+    Reverse or Float -- Only returns Reverse if x is a Reverse object. Else float.
+"""
 def csch(x):
     return 1 / sinh(x)
 
 
+"""Calculates hyperbolic cot of a given value using inverse of tanh Reverse method
+
+Returns:
+    Reverse or Float -- Only returns Reverse if x is a Reverse object. Else float.
+"""
 def coth(x):
     return 1 / tanh(x)
 
 
-def ln(x):
-    return log(x)
+"""Calculates base log of a given value. Defaults to natural log.
+Inputs:
+    x: Reverse or Float -- Value to calculate log.
+    base (default: e): Float -- log base
 
-
-def log2(x):
-    return log(x, 2)
-
-
-def log10(x):
-    return log(x, 10)
-
-
+Returns:
+    Reverse or Float -- Only returns Reverse if x is a Reverse object. Else float.
+"""
 def log(x, base=np.exp(1)):
-    # default log is natural log
     try:
         z = Reverse(log(x.value, base))
         x.children.append((1 / (log(base) * x.value), z))
@@ -199,6 +330,39 @@ def log(x, base=np.exp(1)):
         return math.log(x, base)
 
 
+"""Calculates natural log of a given value using log Reverse method
+
+Returns:
+    Reverse or Float -- Only returns Reverse if x is a Reverse object. Else float.
+"""
+def ln(x):
+    return log(x)
+
+
+"""Calculates log2 of a given value using log Reverse method with 2 base
+
+Returns:
+    Reverse or Float -- Only returns Reverse if x is a Reverse object. Else float.
+"""
+def log2(x):
+    return log(x, 2)
+
+
+"""Calculates log10 of a given value using log Reverse method with 10 base
+
+Returns:
+    Reverse or Float -- Only returns Reverse if x is a Reverse object. Else float.
+"""
+def log10(x):
+    return log(x, 10)
+
+
+
+""" Calculates square root of given value
+
+Returns:
+    Reverse -- Input raised to the 0.5
+"""
 def sqrt(x):
     return x ** (1 / 2)
 
