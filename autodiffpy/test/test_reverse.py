@@ -290,38 +290,6 @@ def test_other_trig_funcs():
     assert f.value == approx(2 * (np.cosh(2) / np.sinh(2)))
     assert x.get_gradient() == approx(-1 / (np.sinh(2) ** 2))
 
-def test_find_gradient_vector_error_cases():
-    # function attribute error
-    func = ['3*2']
-    vars_dict = {'x': 1}
-    vector = rVector(func, vars_dict)
-    assert vector.values['3*2'] == 6
-
-    with raises(AttributeError): # variable attribute error
-        func = ['3*x']
-        vars_dict = {'2': 1}
-        vector = rVector(func, vars_dict)
-
-    with raises(ValueError):
-        func = ['3*x']
-        vars_dict = {'x': 'e'}
-        vector = rVector(func, vars_dict)
-
-    with raises(Exception):
-        func = ['3x']
-        vars_dict = {'x': 1}
-        vector = rVector(func, vars_dict)
-        
-    with raises(Exception):
-        func = ['3*x*y']
-        vars_dict = {'x': 1}
-        vector = rVector(func, vars_dict)
-
-    with raises(TypeError):
-        func = [2*3]
-        vars_dict = {'x': 1}
-        vector = rVector(func, vars_dict)
-
 def test_vector():
     x = Reverse(1)
     y = Reverse(2)
