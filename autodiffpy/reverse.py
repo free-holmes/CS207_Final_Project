@@ -224,43 +224,39 @@ def sqrt(x):
 
 
 class rVector():
-    def __init__(self, functions: list, variables: list):
+    def __init__(self, functions: list):
         # INPUT: functions in a list
-        # INPUT : variables in a list
         # example:
         # x = Reverse(1)
         # y = Reverse(2)
         # functions = [x*2*y+y**3, 2*x**2*y, 3*y]
-        # variables = [x, y]
-        # vector = rVector(functions, variables)
+        # vector = rVector(functions)
+        # print(vector.values)
+        # print(vector.find_gradients(x))
+        # print(vector.find_gradients(y))
         # >>> [12, 4, 6]
         # >>> [4.0, 8.0, 0]
         # >>> [14.0, 2.0, 3.0]
 
         self.functions = functions
-        self.variables = variables
         self.values = []
-        self.gradients = {}
-        self.find_gradients()
+        self.find_values()
 
-    def find_gradients(self):
-        for i, j in enumerate(self.functions):
+    def find_values(self):
+        for i in self.functions:
+            self.values.append(i.value)
+
+    def find_gradients(self, variable):
+        gradients = []
+        for i in self.functions:
             for f in self.functions:
                 f.gradient_value = 0
-            j.gradient_value = 1.0
+            i.gradient_value = 1.0
 
-            self.values.append(j.value)
+            gradients.append(variable.get_gradient())
+            variable.reset_gradient()
 
-            for v in self.variables:
-                if id(v) not in self.gradients.keys():
-                    self.gradients[id(v)] = [v.get_gradient()]
-                else:
-                    self.gradients[id(v)].append(v.get_gradient())
-            for v in self.variables:
-                v.reset_gradient()
-
-    def get_gradients(self, variable):
-        return self.gradients[id(variable)]
+        return gradients
 
     def get_values(self):
         return self.values

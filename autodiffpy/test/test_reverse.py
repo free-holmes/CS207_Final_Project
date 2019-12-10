@@ -294,10 +294,10 @@ def test_vector():
     x = Reverse(1)
     y = Reverse(2)
     functions = [x*2*y+y**3, 2*x**2*y, 3*y]
-    variables = [x, y]
-    vector = rVector(functions, variables)
+    vector = rVector(functions)
 
     # Check for get_values()
     assert vector.get_values() == [12, 4, 6]
     # Check for get_gradients()
     assert vector.get_gradients(x) == [4.0, 8.0, 0]
+    assert vector.get_gradients(x) == [14.0, 2.0, 3.0]
