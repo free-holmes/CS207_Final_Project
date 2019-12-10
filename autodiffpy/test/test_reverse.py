@@ -43,9 +43,9 @@ def test_eq_ne():
 
 def test_str():
     x = Reverse(5)
-    f = sin(x) + 2
-    f.gradient_value = 1.0
-    assert str(f) == "value = 1.0410757253368614, gradient_value = 1.0"
+    f = x ** 2 + 3
+    f.gradient_value = 1
+    assert str(f) == '[28, 1]'
 
 
 def test_single_var():
@@ -349,7 +349,7 @@ def test_vector():
     vector = rVector(functions)
 
     # Check for get_values()
-    assert vector.values == [12, 4, 6]
+    assert vector.values == approx([12, 4, 6])
     # Check for get_gradients()
-    assert vector.get_gradients(x) == [4.0, 8.0, 0]
-    assert vector.get_gradients(y) == [14.0, 2.0, 3.0]
+    assert vector.get_gradients(x) == approx([4.0, 8.0, 0])
+    assert vector.get_gradients(y) == approx([14.0, 2.0, 3.0])

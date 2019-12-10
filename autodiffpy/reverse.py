@@ -45,7 +45,11 @@ class Reverse:
         self.gradient_value = None
 
     def reset_gradient(self):
-        """Resets the gradient values to None in the computation graph."""
+        """Resets the gradient values to None in the computation graph.
+
+        Returns:
+            None
+        """
         self.gradient_value = None
         for _, child in self.children:
             child.reset_gradient()
@@ -68,7 +72,8 @@ class Reverse:
         Returns:
             String -- displays value and gradient_value
         """
-        return f"value = {self.value}, gradient_value = {self.gradient_value}"
+
+        return str([self.value, self.gradient_value])
 
     def __add__(self, other):
         """Adds Reverse object to another value and appends result to children
@@ -550,6 +555,12 @@ class rVector:
     def __init__(self, functions: list):
         """The constructor of rVector
 
+        Arguments:
+            functions {list} -- list of functions to evaluate
+
+        Returns:
+            None
+
         >>> x = Reverse(1)
         >>> y = Reverse(2)
         >>> functions = [x*2*y+y**3, 2*x**2*y, 3*y]
@@ -563,16 +574,17 @@ class rVector:
         """
 
         self.functions = functions
-        self.values = []
-        self._find_values()
-
-    def _find_values(self):
-        for i in self.functions:
-            self.values.append(i.value)
+        self.values = [i.value for i in self.functions]
 
     def get_gradients(self, variable):
         """Gets the gradient of the provided variable with respect to all the
         expressions in the list of functions.
+
+        Arguments:
+            variable {Reverse} -- Variable to get gradients for.
+
+        Returns:
+            list -- Gradient of all functions for the input variable
         """
         gradients = []
         for i in self.functions:
