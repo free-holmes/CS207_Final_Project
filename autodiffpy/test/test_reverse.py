@@ -45,7 +45,7 @@ def test_str():
     x = Reverse(5)
     f = sin(x) + 2
     f.gradient_value = 1.0
-    assert str(f) == "value = 1.0410757253368614, gradient_value = 1.0"
+    assert str(f) == "[1.0410757253368614, 1.0]"
 
 
 def test_single_var():
