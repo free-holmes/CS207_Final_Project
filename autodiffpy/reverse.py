@@ -9,13 +9,19 @@ class Reverse:
         self.children = []
         self.gradient_value = None
 
+    """Resets reverse children and gradient value
+    
+    Returns:
+        None
+    """
     def reset(self):
         self.children = []
         self.gradient_value = None
 
-    """Returns gradient value.
+    """Returns gradient value. Calculates gradient value if undefined.
 
-        Sets gradient_value if none is specified.
+        Returns:
+            Float -- gradient value
     """
     def get_gradient(self):
         if self.gradient_value is None:
@@ -27,7 +33,7 @@ class Reverse:
     """Sets string output for Revese object
     
     Returns:
-        string -- displays value and gradient_value
+        String -- displays value and gradient_value
     """
     def __str__(self):
         return f"value = {self.value}, gradient_value = {self.gradient_value}"
