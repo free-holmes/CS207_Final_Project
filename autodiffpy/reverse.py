@@ -399,12 +399,7 @@ def sinh(x):
     Returns:
         {Reverse, Float} -- Only returns Reverse if x is a Reverse object. Else float.
     """
-    try:
-        z = Reverse(sinh(x.value))
-        x.children.append((cosh(x.value), z))
-        return z
-    except AttributeError:
-        return (exp(x) - exp(-x)) / 2
+    return (exp(x) - exp(-x)) / 2
 
 
 def cosh(x):
@@ -417,12 +412,7 @@ def cosh(x):
     Returns:
         {Reverse, Float} -- Only returns Reverse if x is a Reverse object. Else float.
     """
-    try:
-        z = Reverse(cosh(x.value))
-        x.children.append((sinh(x.value), z))
-        return z
-    except AttributeError:
-        return (exp(x) + exp(-x)) / 2
+    return (exp(x) + exp(-x)) / 2
 
 
 def tanh(x):
