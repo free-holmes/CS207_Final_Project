@@ -1,19 +1,38 @@
-import numpy as np
+"""Implements the reverse mode of automatic differentiation.
+
+The main object of interest is the Reverse class which allows users to define
+inputs to be differentiated. The Reverse objects can be combined together
+using standard Python mathematical operators and the defined elementary
+functions within this file as well.
+"""
 import math
+import numpy as np
 
 
-""" Class for automatic differentiation using reverse mode. Represents a node in the computation graph.
+"""Class for automatic differentiation using reverse mode. Represents a node
+in the computation graph.
 
 Attributes:
     value {Float} -- value of the node in the computation graph
-    children {[Reverse]} -- Array of Reverse nodes whose value is dependent upon this node
+    children {[Reverse]} -- Array of Reverse nodes whose value is dependent
+        upon this node
     gradient_value -- gradient of the node in the computation graph
 """
 
 
 class Reverse:
+    """The Reverse class which stores the computation graph of the function
+    application.
+
+    The class overrides the dunder methods for Python mathematical operators,
+    which allows us to combine Reverse objects with standard mathematical
+    operators and then build the computation graph.
+    """
+
     def __init__(self, val):
-        """Initializes a Reverse object with value, empty children array, and a blank gradient. Children are nodes whose values are dependent upon this node.
+        """Initializes a Reverse object with value, empty children array, and
+        a blank gradient. Children are nodes whose values are dependent upon
+        this node.
 
         Arguments:
             val {Float} -- stores function value at this point of reverse graph
@@ -26,15 +45,16 @@ class Reverse:
         self.gradient_value = None
 
     def reset_gradient(self):
+        """Resets the gradient values to None in the computation graph."""
         self.gradient_value = None
-        for i in self.children:
-            i[1].reset_gradient()
+        for _, child in self.children:
+            child.reset_gradient()
 
     def get_gradient(self):
         """Returns gradient value. Calculates gradient value if undefined.
 
-            Returns:
-                Float -- gradient value
+        Returns:
+            Float -- gradient value
         """
         if self.gradient_value is None:
             self.gradient_value = sum(
@@ -43,7 +63,7 @@ class Reverse:
         return self.gradient_value
 
     def __str__(self):
-        """Sets string output for Revese object
+        """Sets string output for Reverse object.
 
         Returns:
             String -- displays value and gradient_value
@@ -54,7 +74,8 @@ class Reverse:
         """Adds Reverse object to another value and appends result to children
 
         Arguments:
-            other {Reverse, Float} -- determines type then adds to self and appends to children
+            other {Reverse, Float} -- determines type then adds to self and
+                appends to children
 
         Returns:
             Reverse -- sum of self and other object
@@ -81,10 +102,12 @@ class Reverse:
         return self.__add__(other)
 
     def __sub__(self, other):
-        """Returns difference between self and other object by negating other then adding to self
+        """Returns difference between self and other object by negating other
+        then adding to self
 
         Arguments:
-            other {Reverse, Float} -- negates then calls as input to Reverse.__add__
+            other {Reverse, Float} -- negates then calls as input to
+                Reverse.__add__
 
         Returns:
             Reverse -- difference of self and other
@@ -92,7 +115,8 @@ class Reverse:
         return self.__add__(-other)
 
     def __rsub__(self, other):
-        """Returns difference between else and other object by negating self then adding to other
+        """Returns difference between else and other object by negating self
+        then adding to other
 
         Arguments:
             other {Reverse, Float} -- adds to self after negating self
@@ -103,10 +127,12 @@ class Reverse:
         return self.__neg__() + other
 
     def __mul__(self, other):
-        """Calculates the product of self and other and appends result to children
+        """Calculates the product of self and other and appends result to
+        children
 
         Arguments:
-            other {Reverse, Float} -- determines type then multiplies with self and appends to children
+            other {Reverse, Float} -- determines type then multiplies with
+                self and appends to children
 
         Returns:
             Reverse -- product of self and other
@@ -263,7 +289,8 @@ def cos(x):
 
 
 def tan(x):
-    """Returns tan of x using sin and cos Reverse methods. Appends result to x.children if x is a Reverse object.
+    """Returns tan of x using sin and cos Reverse methods. Appends result to
+    x.children if x is a Reverse object.
 
     Arguments:
         x {Reverse, Float} -- input to tan function
@@ -275,7 +302,8 @@ def tan(x):
 
 
 def sec(x):
-    """Returns sec of x using inverse of cos Reverse method. Appends result to x.children if x is a Reverse object.
+    """Returns sec of x using inverse of cos Reverse method. Appends result
+    to x.children if x is a Reverse object.
 
     Arguments:
         x {Reverse, Float} -- input to sec function
@@ -287,7 +315,8 @@ def sec(x):
 
 
 def csc(x):
-    """Returns csc of x using inverse of sin Reverse method. Appends result to x.children if x is a Reverse object.
+    """Returns csc of x using inverse of sin Reverse method. Appends result
+    to x.children if x is a Reverse object.
 
     Arguments:
         x {Reverse, Float} -- input to csc function
@@ -299,7 +328,8 @@ def csc(x):
 
 
 def cot(x):
-    """Returns cot of x using inverse of tan Reverse method. Appends result to x.children if x is a Reverse object.
+    """Returns cot of x using inverse of tan Reverse method. Appends result
+    to x.children if x is a Reverse object.
 
     Arguments:
         x {Reverse, Float} -- input to cot function
@@ -311,6 +341,9 @@ def cot(x):
 
 
 def arcsin(x):
+    """Computes the arcsin of the Reverse object and computes the
+    derivative.
+    """
     try:
         z = Reverse(arcsin(x.value))
         x.children.append((1 / (sqrt(1 - x.value ** 2)), z))
@@ -320,6 +353,7 @@ def arcsin(x):
 
 
 def arccos(x):
+    """Computes the arccos of the object."""
     try:
         z = Reverse(arccos(x.value))
         x.children.append((-1 / (sqrt(1 - x.value ** 2)), z))
@@ -329,6 +363,7 @@ def arccos(x):
 
 
 def arctan(x):
+    """Computes the arctan of the object."""
     try:
         z = Reverse(arctan(x.value))
         x.children.append((1 / (1 + x.value ** 2), z))
@@ -355,7 +390,8 @@ def exp(x):
 
 
 def sinh(x):
-    """Calculates hyperbolic sin of x. Appends result to x.children if x is a Reverse object.
+    """Calculates hyperbolic sin of x. Appends result to x.children if x is a
+    Reverse object.
 
     Arguments:
         x {Reverse, Float} -- input to sinh function
@@ -372,7 +408,8 @@ def sinh(x):
 
 
 def cosh(x):
-    """Calculates hyperbolic cos of x. Appends result to x.children if x is a Reverse object.
+    """Calculates hyperbolic cos of x. Appends result to x.children if x is a
+    Reverse object.
 
     Arguments:
         x {Reverse, Float} -- input to cosh function
@@ -389,7 +426,8 @@ def cosh(x):
 
 
 def tanh(x):
-    """Calculates hyperbolic tan of x using sinh and cosh Reverse methods. Appends result to x.children if x is a Reverse object.
+    """Calculates hyperbolic tan of x using sinh and cosh Reverse methods.
+    Appends result to x.children if x is a Reverse object.
 
     Arguments:
         x {Reverse, Float} -- input to tanh function
@@ -401,7 +439,8 @@ def tanh(x):
 
 
 def sech(x):
-    """Calculates hyperbolic sec of x using inverse of cosh Reverse method. Appends result to x.children if x is a Reverse object.
+    """Calculates hyperbolic sec of x using inverse of cosh Reverse method.
+    Appends result to x.children if x is a Reverse object.
 
     Arguments:
         x {Reverse, Float} -- input to sech function
@@ -413,7 +452,8 @@ def sech(x):
 
 
 def csch(x):
-    """Calculates hyperbolic csc of x using inverse of sinh Reverse method. Appends result to x.children if x is a Reverse object.
+    """Calculates hyperbolic csc of x using inverse of sinh Reverse method.
+    Appends result to x.children if x is a Reverse object.
 
     Arguments:
         x {Reverse, Float} -- input to csch function
@@ -425,7 +465,8 @@ def csch(x):
 
 
 def coth(x):
-    """Calculates hyperbolic cot of x using inverse of tanh Reverse method. Appends result to x.children if x is a Reverse object.
+    """Calculates hyperbolic cot of x using inverse of tanh Reverse method.
+    Appends result to x.children if x is a Reverse object.
 
     Arguments:
         x {Reverse, Float} -- input to coth function
@@ -437,7 +478,8 @@ def coth(x):
 
 
 def log(x, base=np.exp(1)):
-    """Calculates base log of x. Defaults to natural log. Appends result to x.children if x is a Reverse object.
+    """Calculates base log of x. Defaults to natural log. Appends result to
+    x.children if x is a Reverse object.
 
     Arguments:
         x {Reverse, Float} -- Value to calculate log.
@@ -455,7 +497,8 @@ def log(x, base=np.exp(1)):
 
 
 def ln(x):
-    """Calculates natural log of x using log Reverse method. Appends result to x.children if x is a Reverse object.
+    """Calculates natural log of x using log Reverse method. Appends result
+    to x.children if x is a Reverse object.
 
     Arguments:
         x {Reverse, Float} -- Value to calculate natural log.
@@ -467,7 +510,8 @@ def ln(x):
 
 
 def log2(x):
-    """Calculates log2 of x using log Reverse method with 2 base. Appends result to x.children if x is a Reverse object.
+    """Calculates log2 of x using log Reverse method with 2 base. Appends
+    result to x.children if x is a Reverse object.
 
     Arguments:
         x {Reverse, Float} -- Value to calculate log2.
@@ -479,7 +523,8 @@ def log2(x):
 
 
 def log10(x):
-    """Calculates log10 of x using log Reverse method with 10 base. Appends result to x.children if x is a Reverse object.
+    """Calculates log10 of x using log Reverse method with 10 base. Appends
+    result to x.children if x is a Reverse object.
 
     Arguments:
         x {Reverse, Float} -- Value to calculate log10.
@@ -491,7 +536,8 @@ def log10(x):
 
 
 def sqrt(x):
-    """ Calculates square root of x. Appends result to x.children if x is a Reverse object.
+    """Calculates square root of x. Appends result to x.children if x is a
+    Reverse object.
 
     Arguments:
         x {Reverse, Float} -- Value to calculate square root for.
@@ -503,19 +549,25 @@ def sqrt(x):
 
 
 class rVector:
+    """The class rVector allows expressions to be combined into multiple
+    outputs and then find the gradient of those expressions with respect to
+    various inputs.
+    """
+
     def __init__(self, functions: list):
-        # INPUT: functions in a list
-        # example:
-        # x = Reverse(1)
-        # y = Reverse(2)
-        # functions = [x*2*y+y**3, 2*x**2*y, 3*y]
-        # vector = rVector(functions)
-        # print(vector.values)
-        # print(vector.get_gradients(x))
-        # print(vector.get_gradients(y))
-        # >>> [12, 4, 6]
-        # >>> [4.0, 8.0, 0]
-        # >>> [14.0, 2.0, 3.0]
+        """The constructor of rVector
+
+        >>> x = Reverse(1)
+        >>> y = Reverse(2)
+        >>> functions = [x*2*y+y**3, 2*x**2*y, 3*y]
+        >>> vector = rVector(functions)
+        >>> print(vector.values)
+        [12, 4, 6]
+        >>> print(vector.get_gradients(x))
+        [4.0, 8.0, 0]
+        >>> print(vector.get_gradients(y))
+        [14.0, 2.0, 3.0]
+        """
 
         self.functions = functions
         self.values = []
@@ -526,6 +578,9 @@ class rVector:
             self.values.append(i.value)
 
     def get_gradients(self, variable):
+        """Gets the gradient of the provided variable with respect to all the
+        expressions in the list of functions.
+        """
         gradients = []
         for i in self.functions:
             for f in self.functions:
