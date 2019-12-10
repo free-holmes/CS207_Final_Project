@@ -13,6 +13,11 @@ class Reverse:
         self.children = []
         self.gradient_value = None
 
+    def reset_gradient(self):
+        self.gradient_value = None
+        for i in self.children:
+            i[1].reset_gradient()
+
     def get_gradient(self):
         if self.gradient_value is None:
             self.gradient_value = sum(
@@ -223,109 +228,43 @@ def sqrt(x):
 
 
 class rVector():
-    def __init__(self, functions: list, variables: dict):
-        # INPUT: functions is a list
-        # functions must be a string
-        # INPUT : variables is a dictionary
-        # keys are the variable name (string)
-        # key values are the values of the variables
+    def __init__(self, functions: list, variables: list):
+        # INPUT: functions in a list
+        # INPUT : variables in a list
         # example:
-        # func = ['x*2*y+y**3', '2*x**2*y', '3*y']
-        # vars_dict = {'x': 1, 'y': 2}
-        # vector = rVector(func, vars_dict)
+        # x = Reverse(1)
+        # y = Reverse(2)
+        # functions = [x*2*y+y**3, 2*x**2*y, 3*y]
+        # variables = [x, y]
+        # vector = rVector(functions, variables)
+        # >>> [12, 4, 6]
+        # >>> [4.0, 8.0, 0]
+        # >>> [14.0, 2.0, 3.0]
 
         self.functions = functions
         self.variables = variables
-        self.values = None
-        self.gradients = None
+        self.values = []
+        self.gradients = {}
         self.find_gradients()
 
-    def __str__(self):
-        # returns a string of the class in a user friendly form
-        # example:
-        # func = ['x*2*y+y**3', '2*x**2*y', '3*y']
-        # vars_dict = {'x': 1, 'y': 2}
-        # vector = rVector(func, vars_dict)
-        # print(vector)
-        # >>> x=1
-        # >>> y=2
-        # >>> x*2*y+y**3=12.0  Df(x)=4.0  Df(y)=14.0
-        # >>> 2*x**2*y=4.0  Df(x)=8.0  Df(y)=2.0
-        # >>> 3*y=6.0  Df(x)=0  Df(y)=3
+    def find_gradients(self):
+        for i, j in enumerate(self.functions):
+            for f in self.functions:
+                f.gradient_value = 0
+            j.gradient_value = 1.0
 
-        printout = ''.join([f"{k}={v}\n" for k,v in self.variables.items()])
-        for i, j in zip(self.gradients.items(), self.values.items()):
-            printout += f'{j[0]}={j[1]}  ' + ''.join([f"Df({k})={v}  " for k,v in i[1].items()]) + '\n'
-        return printout.rstrip()
+            self.values.append(j.value)
 
-    def find_gradients(self, functions: list = None, variables: dict = None):
-        # rules for inputs are the same as __init__
+            for v in self.variables:
+                if id(v) not in self.gradients.keys():
+                    self.gradients[id(v)] = [v.get_gradient()]
+                else:
+                    self.gradients[id(v)].append(v.get_gradient())
+            for v in self.variables:
+                v.reset_gradient()
 
-        # overwrites functions and variables from initialization if provided in function call
-        if variables is not None:
-            self.variables = variables
-        if functions is not None:
-            self.functions = functions
+    def get_gradients(self, variable):
+        return self.gradients[id(variable)]
 
-        # create Reverse objects from variables
-        for k, v in self.variables.items():
-            try:
-                assert k[0].isalpha()
-                vars()[k] = Reverse(float(v))
-            except (AttributeError, AssertionError) as e:
-                raise AttributeError(f'INVALID VARIABLE: {k} in {self.variables.keys()}, All variable names must be alphanumeric.')
-            except ValueError as e:
-                raise ValueError(f'INVALID VALUE: {k} = {v}, assigned value must be a real number.')
-
-        # evaluate function and gradients
-        self.values = {}
-        self.gradients = {}
-        for f in self.functions:
-            try:
-                eval_func = eval(f)
-                eval_func.gradient_value = 1
-                self.values[f] = eval_func.value
-                var_results = {}
-                for i in self.variables.keys():
-                    var_results[i] = vars()[i].get_gradient()
-                    vars()[i].reset()
-                if len(self.variables.items()) > 0:
-                    self.gradients[f] = var_results
-            except AttributeError as e:
-                self.values[f] = eval(f)
-            except (SyntaxError, NameError) as e:
-                raise Exception(f'INVALID FUNCTION: {f}, {e}')
-            except TypeError as e:
-                raise TypeError(f'INVALID FUNCTION: Function {f} must be input as a string, {e}')
-
-        # returns dictionary of functions with their gradients
-        return self.gradients
-
-
-    def get_gradients(self, func_num: int = None, var_name: str = None):
-        # gets the gradient values for one function and/or key
-        # example:
-        # func = ['x*2*y+y**3', '2*x**2*y', '3*y']
-        # vars_dict = {'x': 1, 'y': 2}
-        # vector = rVector(func, vars_dict)
-        # vector.get_gradients(func_num=0, var_name='x')
-        # >>> 4.0
-        # vector.get_gradients(func_num=0)
-        # >>> {'x': 4.0, 'y': 14.0}
-        # vector.get_gradients(var_name='x')
-        # >>> [4.0, 8.0, 0]
-        # vector.get_gradients()
-        # >>> [{'x': 4.0, 'y': 14.0}, {'x': 8.0, 'y': 2.0}, {'x': 0, 'y': 3}]
-
-        # returns gradient value of all functions if no func_num or var_name provided
-        if var_name is None and func_num is None:
-            return list(self.gradients.values())
-        # returns gradient value of var_name for all functions if no func_num provided
-        elif func_num is None:
-            return [i[var_name] for i in list(self.gradients.values())]
-        # returns gradient value for all variables of function if no var_name provided
-        elif var_name is None:
-            return list(self.gradients.values())[func_num]
-        # returns the gradient value for the provided func_num and var_name
-        else:
-            return list(self.gradients.values())[func_num][var_name]
+    def get_values(self):
+        return self.values
