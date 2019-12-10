@@ -33,6 +33,7 @@ f = x ** 2
 f.gradient_value = 1
 
 print(f.value, x.get_gradient())
+>>> 9 6
 ```
 
 ## Learn more
