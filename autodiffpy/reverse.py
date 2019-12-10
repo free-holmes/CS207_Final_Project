@@ -2,10 +2,16 @@ import numpy as np
 import math
 
 
-# class for automatic differentiation reverse mode
+''' Class for automatic differentiation using reverse mode. Represents a node in the computation graph.
+
+Attributes:
+    value {Float} -- value of the node in the computation graph
+    children {[Reverse]} -- Array of Reverse nodes whose value is dependent upon this node
+    gradient_value -- gradient of the node in the computation graph
+'''
 class Reverse:
     def __init__(self, val):
-        '''Initializes a Reverse object with value, empty children, and no gradient
+        '''Initializes a Reverse object with value, empty children array, and a blank gradient. Children are nodes whose values are dependent upon this node. 
         
         Arguments:
             val {Float} -- stores function value at this point of reverse graph
