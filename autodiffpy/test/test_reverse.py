@@ -317,6 +317,21 @@ def test_other_trig_funcs():
     assert x.get_gradient() == approx(-1 / (np.sinh(2) ** 2))
 
 
+def test_vector_simple():
+    x = Reverse(-3)
+    y = Reverse(2)
+
+    vector = rVector([x ** 2, x + y * x])
+
+    assert vector.values == approx([9, -3 + 2 * -3])
+
+    x_grad = vector.get_gradients(x)
+    y_grad = vector.get_gradients(y)
+
+    assert x_grad == approx([2 * -3, 1 + 2])
+    assert y_grad == approx([0, -3])
+
+
 def test_vector():
     x = Reverse(1)
     y = Reverse(2)
