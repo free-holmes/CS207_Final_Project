@@ -9,10 +9,6 @@ class Reverse:
         self.children = []
         self.gradient_value = None
 
-    def reset(self):
-        self.children = []
-        self.gradient_value = None
-
     def reset_gradient(self):
         self.gradient_value = None
         for i in self.children:
