@@ -37,7 +37,7 @@ print(f.value, x.get_gradient())
 
 ## Learn more
 
-To learn more about the features of forward and reverse mode, including functions of multiple inputs and outputs and elementary functions, head to our documentation at [our docs](docs/documentation.md).
+To learn more about the features of forward and reverse mode, including functions of multiple inputs and outputs and elementary functions, head to our documentation at [our docs](https://github.com/free-holmes/cs207-FinalProject/blob/master/docs/documentation.md).
 
 ## Authors
 
