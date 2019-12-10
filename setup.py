@@ -9,7 +9,7 @@ with open(path.join(this_directory, "README.md"), encoding="utf-8") as f:
 
 setup(
     name="autodiffpy-free-holmes",
-    version="0.0.7",
+    version="0.0.8",
     packages=["autodiffpy"],
     install_requires=["numpy"],
     long_description=long_description,

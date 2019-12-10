@@ -277,6 +277,16 @@ def test_sqrt():
     assert x.get_gradient() == approx(0.5 * (2 ** (-0.5)))
 
 
+def test_pos():
+    x = Reverse(3)
+
+    f = +(x * x)
+    f.gradient_value = 1
+
+    assert f.value == approx(9)
+    assert x.get_gradient() == approx(2 * 3)
+
+
 def test_other_trig_funcs():
     x = Reverse(2)
     f = sinh(x) + sinh(2)

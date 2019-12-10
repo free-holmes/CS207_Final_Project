@@ -220,6 +220,9 @@ class Reverse:
         """
         return self.__mul__(-1)
 
+    def __pos__(self):
+        return self
+
     def __eq__(self, other):
         """Calculates whether self is equal to other
 
